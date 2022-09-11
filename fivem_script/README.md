@@ -1,8 +1,8 @@
 
 # Installation
-Step 1: Copy over the `tokovoip_script` resource (Note: It must be called specifically tokovoip_script due to NUI restrictions)
-Step 2: Edit the `c_config.lua` to your liking
-Step 3: Edit the `s_config.lua` to your liking
+Step 1: Copy over the `tokovoip_script` resource (Note: It must be called specifically tokovoip_script due to NUI restrictions)\
+Step 2: Edit the `c_config.lua` to your liking\
+Step 3: Edit the `s_config.lua` to your liking\
 
 ## Exports
 ---------------------------------------------------------------
