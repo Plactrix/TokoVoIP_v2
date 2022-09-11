@@ -1,18 +1,13 @@
 
-# Setting up
-The script must be placed in a folder named `tokovoip_script` (NUI restriction)
+# Installation
+Step 1: Copy over the `tokovoip_script` resource (Note: It must be called specifically tokovoip_script due to NUI restrictions)
+Step 2: Edit the `c_config.lua` to your liking
+Step 3: Edit the `s_config.lua` to your liking
 
-You can edit the voip configuration in `c_config.lua`
-
-You can edit the radio channels in `s_config.lua`  
-If the channel name contains 'Call' it will be displayed as a call on the ingame overlay
-
-## API Reference
+## Exports
 ---------------------------------------------------------------
 
-***Currently, the radio channels interaction must be done via the client***
-
-## Client exports
+***All exports are currently done on client-side only***
 
 - ### addPlayerToRadio(channel)
 
