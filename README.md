@@ -28,6 +28,15 @@ Here are some of the TokoVoIP V2 features:<br />
 ㅤ• Cleaner UI\
 ㅤand much more!
 
+Our To-Do List:<br />
+• Add an export to set toko disabled (Usefull for things such as if a player is dead or if you want to setup a tunnel type system)\
+• Add interior voice effects (such as an echo in a big room)\
+• Add a build-in or standalone radio system for toko\
+• Create an external program so you can connect to toko's radio frequencies (Usefull for dispatch)\
+• Make the blocking screen toggle-able\
+• Create a more user-friendly configuration
+
+
 If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or DM me on Discord (Plactrix#0001)
 
 If you like TokoVoIP, feel free to leave the original creator a donation ([Itokoyamato](https://github.com/Itokoyamato/TokoVOIP_TS3)):<br/><br/>
