@@ -178,6 +178,7 @@ For the rest, refer to the [license](https://github.com/Itokoyamato/TokoVOIP_TS3
 # Dependencies, sources and credits
 
 - [Original TokoVoIP Developer](Itokoyamatohttps://github.com/Itokoyamato/TokoVOIP_TS3) ([Itokoyamato](https://github.com/Itokoyamato/TokoVOIP_TS3))
+- Coding the Master Server [Neon](https://github.com/DeveloperNeon)
 - [RadioFX](https://github.com/thorwe/teamspeak-plugin-radiofx) by Thorwe
 - [Simple-WebSocket-Server](https://gitlab.com/eidheim/Simple-WebSocket-Server) by eidheim
 - [JSON for Modern C++](https://github.com/nlohmann/json.git) by nlohmann
