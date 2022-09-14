@@ -16,6 +16,8 @@
 
 
 # Introduction to TokoVoIP V2
+First things first, I would like to clarify <strong>I do not own the original code</strong> of TokoVoIP. I simply am just maintaining it so server owners can continue using it.\
+\
 TokoVoIP (originally developed by [Itokoyamato](https://github.com/Itokoyamato/TokoVOIP_TS3)) is a FiveM VoIP script that uses TeamSpeak as the voice server allowing for higher quality voice chat. After I saw the countless amount of people requesting the script to come back, I decided to continue development on the script and create a version 2 of it so that others can continue to use the script.
 
 Here are some of the TokoVoIP V2 features:<br />
