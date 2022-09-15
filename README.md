@@ -40,7 +40,10 @@ Our To-Do List:<br />
 • Completely recode the TS3 Plugin to use more modern modules (this will also allow for an easier way to compile it)\
 • Remove NUI voice text, move it to DrawText (better performance-wise)\
 • Completely remove client-sided radio clicks and add server-sided ones in replacement\
-• Rewrite ws_server with updated dependencies
+• Rewrite ws_server with updated dependencies\
+• Change default download URL in FiveM script config.lua & Completely redo it and organise it\
+• Change default talk range in FiveM script config.lua\
+• 
 
 
 If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or DM me on Discord (Plactrix#0001)
