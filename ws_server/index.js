@@ -176,7 +176,7 @@ async function registerHandshake(socket) {
     }
     client = Object.values(clients).find(item => !item.fivem.socket && item.ip === socket.clientIp);
     try {
-      await axios.post('https://master.tokovoip.itokoyamato.net/register', {
+      await axios.post('https://master.tokovoip.plactrix.net/register', {
         ip: socket.clientIp,
         server: {
           tsServer: config.TSServer,
@@ -250,13 +250,13 @@ function socketHeartbeat(socket) {
 }
 
 async function masterHeartbeat() {
-  axios.post('https://master.tokovoip.itokoyamato.net/heartbeat', {
+  axios.post('https://master.tokovoip.plactrix.net/heartbeat', {
     tsServer: config.TSServer,
     WSServerIP: config.WSServerIP,
     WSServerPort: config.WSServerPort,
   })
   .then(_ => console.log('Heartbeat sent'))
-  .catch(e => console.error('Sending heartbeat failed with error:', e.code));
+  .catch(e => console.error('Sending heartbeat failed with error:', e));
 }
 
 const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
