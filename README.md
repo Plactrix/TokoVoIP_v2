@@ -38,7 +38,9 @@ Our To-Do List:<br />
 • Make the blocking screen toggle-able\
 • Create a more user-friendly configuration\
 • Completely recode the TS3 Plugin to use more modern modules (this will also allow for an easier way to compile it)\
-• Remove NUI voice text, move it to DrawText (better performance-wise)
+• Remove NUI voice text, move it to DrawText (better performance-wise)\
+• Completely remove client-sided radio clicks and add server-sided ones in replacement\
+• Rewrite ws_server with updated dependencies
 
 
 If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or DM me on Discord (Plactrix#0001)
