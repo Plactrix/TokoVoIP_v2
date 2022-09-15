@@ -1,19 +1,29 @@
-fx_version 'bodacious'
-games { 'gta5', 'rdr3' }
-rdr3_warning 'I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships.'
+fx_version "bodacious"
+games { "gta5", "rdr3" }
+rdr3_warning "I acknowledge that this is a prerelease build of RedM, and I am aware my resources *will* become incompatible once RedM ships."
 
-client_script "src/c_utils.lua"
-client_script "c_config.lua"
-client_script "src/c_main.lua"
-client_script "src/c_TokoVoip.lua"
+author "Itokoyamato, Plactrix & Neon"
+description "TokoVoIP V2: A simple FiveM VoIP script that uses TeamSpeak as the voice server"
+version "2.0.0"
+lua54 "yes"
 
-server_script "s_config.lua"
-server_script "src/s_main.lua"
-server_script "src/s_utils.lua"
+files {
+	"html/index.html",
+	"html/script.js"
+}
 
-ui_page "nui/index.html"
+ui_page "html/index.html"
 
-files({
-    "nui/index.html",
-    "nui/script.js",
-})
+shared_scripts {
+    "config.lua"
+}
+
+client_scripts {
+    "client/cl_utils.lua",
+    "client/cl_main.lua"
+}
+
+server_scripts {
+    "server/sv_utils.lua",
+    "server/sv_main.lua"
+}
