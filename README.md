@@ -45,8 +45,14 @@ Our To-Do List:<br />
 • Change default talk range in FiveM script config.lua\
 • Rework the connection pop up screen
 
+Our Known-Bugs List:<br />
+• TeamSpeak3 Plugin does not work on certain machines, I am still looking into this and will post an update when its fixed. This is currently our number 1 priority.\
+• ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization. This is number 2 on our priority list\
+• Not a bug, but I just thought i'd throw it in here, the FiveM script doesn't have a blocking screen, it just has a transparent pop up with the TokoVoIP information. I will be adding an option in the configuration to toggle this.\
+If you find any more bugs, feel free to open an issue on Github, or let us know in our Discord server below
 
-If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or DM join our Discord server ([discord.gg/DEQ95eVmQ3](https://discord.gg/DEQ95eVmQ3))
+
+If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or join our Discord server ([discord.gg/DEQ95eVmQ3](https://discord.gg/DEQ95eVmQ3))
 
 If you like TokoVoIP, feel free to leave the original creator a donation ([Itokoyamato](https://github.com/Itokoyamato/TokoVOIP_TS3)):<br/><br/>
 [![Patreon](https://img.shields.io/badge/Become%20a-patron-orange)](https://www.patreon.com/Itokoyamato)
