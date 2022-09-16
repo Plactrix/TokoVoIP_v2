@@ -43,7 +43,8 @@ Our To-Do List:<br />
 • Rewrite ws_server with updated dependencies\
 • Change default download URL in FiveM script config.lua & Completely redo it and organise it\
 • Change default talk range in FiveM script config.lua\
-• Rework the connection pop up screen
+• Rework the connection pop up screen\
+• Add support on TeamSpeak Plugin for Windows 32bit (because some people still use that apparently lol)
 
 Our Known-Bugs List:<br />
 • TeamSpeak3 Plugin does not work on certain machines, I am still looking into this and will post an update when its fixed. This is currently our number 1 priority.\
