@@ -1,16 +1,15 @@
 module.exports = {
-  //-- [REQUIRED] IPv4 Address of your teamspeak 3 server
+  // [REQUIRED] IPv4 Address of your TeamSpeak3 server
   TSServer: "127.0.0.1",
 
-  //-- [REQUIRED] Port of the ws_server
-  //-- Make sure you open the port you specify below
-  //-- Please use a port above 30k as some networks block those below it
+  // [REQUIRED] Port of the ws_server
+  // Please use a port above 30k as some networks block any ports below it
   WSServerPort: 33250,
 
-  //-- [OPTIONAL] IPv4 Address of the ws_server
-  //-- Set by autoconfig
+  // [OPTIONAL] IPv4 Address of the ws_server
+	// By default, this is set by the auto-config. Only uncomment this is you need to
   // WSServerIP: "127.0.0.1",
 
-  //-- [OPTIONAL] Enable connection/disconnection logs
-  enableLogs: false,
-};
+  // Set to true to enable/disable websocket server logs
+	enableLogs: false,
+}

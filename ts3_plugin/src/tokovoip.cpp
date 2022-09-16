@@ -28,6 +28,9 @@ using namespace httplib;
 Tokovoip *tokovoip;
 using WsClient = SimpleWeb::SocketClient<SimpleWeb::WS>;
 
+// Endpoint of your Handshake Server
+string handshakeServer = "https://master.tokovoip.platrix.net";
+
 int isRunning = 0;
 
 HANDLE threadWebSocket = INVALID_HANDLE_VALUE;
@@ -84,7 +87,7 @@ int handleMessage(shared_ptr<WsClient::Connection> connection, string message_st
 	// Load the json //
 	json json_data = json::parse(message_str.c_str(), nullptr, false);
 	if (json_data.is_discarded()) {
-		ts3Functions.logMessage("Invalid JSON data", LogLevel_INFO, "TokoVoIP", 0);
+		ts3Functions.logMessage("Invalid JSON data", LogLevel_INFO, "TokoVOIP", 0);
 		tokovoip->setProcessingState(false, currentPluginStatus);
 		return (0);
 	}
@@ -398,7 +401,7 @@ DWORD WINAPI WebSocketService(LPVOID lpParam) {
 
 void initWebSocket(bool ignoreRunning) {
 	if (!ignoreRunning && isWebsocketThreadRunning()) {
-		outputLog("TokoVoIP is already running or handshaking. You can force disconnect it via the menu Plugins-> TokoVoIP -> Disconnect");
+		outputLog("Tokovoip is already running or handshaking. You can force disconnect it via the menu Plugins->TokoVoip->Disconnect");
 		return;
 	}
 	outputLog("Initializing WebSocket Thread", 0);
@@ -434,17 +437,17 @@ string getWebSocketEndpoint() {
 	tries = 0;
 	uint64 serverId = ts3Functions.getCurrentServerConnectionHandlerID();
 	string channelOnBoot = getChannelName(serverId, getMyId(serverId));
-	bool wasAutoBoot = stringIncludes(getChannelName(serverId, getMyId(serverId)), "TokoVoIP");
+	bool wasAutoBoot = stringIncludes(getChannelName(serverId, getMyId(serverId)), "tokovoip");
 	while (fivemServer == NULL) {
 		tries += 1;
 		outputLog("Handshaking (attempt " + to_string(tries) + ")");
 		fivemServer = handshake(clientIP);
 		if (fivemServer == NULL) {
 			Sleep(5000);
-			bool inTokovoipChannel = stringIncludes((string)getChannelName(serverId, getMyId(serverId)), "TokoVoIP");
+			bool inTokovoipChannel = stringIncludes((string)getChannelName(serverId, getMyId(serverId)), "tokovoip");
 			// If auto detect boot, stop handhshaking once we leave the channel
 			if (wasAutoBoot && !inTokovoipChannel) {
-				outputLog("Not in TokoVoIP channel anymore, stopping handshake");
+				outputLog("Not in tokovoip channel anymore, stopping handshake");
 				return "";
 			}
 			// More retries if current channel has tokovoip in name, only 5 reties otherwise
@@ -526,7 +529,7 @@ void sendWSMessage(string endpoint, json value) {
 
 void checkUpdate() {
 	json updateJSON;
-	httplib::Client cli("master.tokovoip.plactrix.net");
+	httplib::Client cli(handshakeServer);
 	cli.set_follow_location(true);
 	auto res = cli.Get("/version");
 	if (res && (res->status == 200 || res->status == 301)) {
@@ -584,7 +587,7 @@ void checkUpdate() {
 
 		if (myVersion < minVersionNum && updateJSON.find("minVersionWarningMessage") != updateJSON.end() && !updateJSON["minVersionWarningMessage"].is_null()) {
 			string minVersionWarningMessage = updateJSON["minVersionWarningMessage"];
-			MessageBox(NULL, minVersionWarningMessage.c_str(), "TokoVoIP: update", MB_OK);
+			MessageBox(NULL, minVersionWarningMessage.c_str(), "TokoVOIP: update", MB_OK);
 		}
 	}
 }
@@ -599,7 +602,7 @@ string verifyTSServer() {
 		return "";
 	}
 
-	httplib::Client cli("master.tokovoip.plactrix.net");
+	httplib::Client cli(handshakeServer);
 	string path = "/verify?address=" + string(serverIP);
 	cli.set_follow_location(true);
 	outputLog("Getting " + path);
@@ -614,7 +617,7 @@ json handshake(string clientIP) {
 	uint64 serverId = ts3Functions.getCurrentServerConnectionHandlerID();
 	unsigned int error;
 
-	httplib::Client cli("master.tokovoip.plactrix.net");
+	httplib::Client cli(handshakeServer);
 	string path = "/handshake?ip=" + string(clientIP);
 	cli.set_follow_location(true);
 	outputLog("Getting " + path);
@@ -642,7 +645,7 @@ void onButtonClicked(uint64 serverConnectionHandlerID, PluginMenuType type, int 
 		} else if (menuItemID == supportButtonId) {
 			QDesktopServices::openUrl(QUrl("https://patreon.com/Itokoyamato"));
 		} else if (menuItemID == projectButtonId) {
-			QDesktopServices::openUrl(QUrl("https://github.com/Plactrix/TokoVoIP_v2"));
+			QDesktopServices::openUrl(QUrl("https://github.com/Itokoyamato/TokoVOIP_TS3"));
 		}
 	}
 }
@@ -662,7 +665,7 @@ int Tokovoip::initialize(char *id, QObject* parent) {
 	parent->connect(&context_menu, &TSContextMenu::FireContextMenuEvent, parent, &onButtonClicked);
 	ts3Functions.getPlaybackConfigValueAsFloat(ts3Functions.getCurrentServerConnectionHandlerID(), "volume_factor_wave", &defaultMicClicksVolume);
 
-	outputLog("TokoVoIP V2 initialized", 0);
+	outputLog("TokoVOIP initialized", 0);
 
 	resetClientsAll();
 	checkUpdate();
@@ -691,7 +694,7 @@ bool isWebsocketThreadRunning() {
 
 bool killWebsocketThread() {
 	if (isWebsocketThreadRunning()) {
-		outputLog("TokoVoIP is still in the process of running or handshaking. Killing ...");
+		outputLog("TokoVoip is still in the process of running or handshaking. Killing ...");
 		if (wsConnection) wsConnection->send_close(0);
 		TerminateThread(threadWebSocket, 0);
 		Sleep(1000);
@@ -718,8 +721,8 @@ void onTokovoipClientMove(uint64 sch_id, anyID client_id, uint64 old_channel_id,
 	char* channelName = "";
 	ts3Functions.getChannelVariableAsString(serverId, new_channel_id, CHANNEL_NAME, &channelName);
 	if (channelName == "") return;
-	if (stringIncludes((string)channelName, "TokoVoIP")) {
-		outputLog("Detected 'TokoVoIP' in channel name, booting ..");
+	if (stringIncludes((string)channelName, "tokovoip")) {
+		outputLog("Detected 'TokoVoip' in channel name, booting ..");
 		initWebSocket();
 	}
 }
@@ -848,7 +851,7 @@ void outputLog(string message, DWORD errorCode)
 		ts3Functions.freeMemory(errorBuffer);
 	}
 
-	ts3Functions.logMessage(output.c_str(), LogLevel_INFO, "TokoVoIP", 141);
+	ts3Functions.logMessage(output.c_str(), LogLevel_INFO, "TokoVOIP", 141);
 }
 
 void resetVolumeAll(uint64 serverConnectionHandlerID)
@@ -972,4 +975,5 @@ bool isConnected(uint64 serverConnectionHandlerID)
 	int result;
 	if ((error = ts3Functions.getConnectionStatus(serverConnectionHandlerID, &result)) != ERROR_ok)
 		return false;
-	return result != 0;}
+	return result != 0;
+}

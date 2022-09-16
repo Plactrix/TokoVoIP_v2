@@ -8,6 +8,7 @@ set(CMAKE_AUTORCC ON)
 
 find_package(Qt5 COMPONENTS Core Sql REQUIRED)
 link_libraries(Qt5::Core Qt5::Sql)
+set(Qt5_DIR "F:/Qt/5.12.7/winrt_x64_msvc2017/lib/cmake/Qt5" CACHE PATH "Initial cache" FORCE) # Change the URL to your CMake directory
 
 include_directories(
     "src"
