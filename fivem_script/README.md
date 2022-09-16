@@ -1,9 +1,9 @@
 
 # Installation
-Step 1: Download the latest version of tokovoip-script.zip from the releases section
-Step 2: Upload it to your server's resources folder
-Step 3: Configure all options in config.lua to fit your servers needs (Note: When configuring channel names, if it contains "Call", it will be displayed as a phone call on the voice overlay)
-Step 4: Install ws_server
+Step 1: Download the latest version of tokovoip-script.zip from the releases section\
+Step 2: Upload it to your server's resources folder\
+Step 3: Configure all options in config.lua to fit your servers needs (Note: When configuring channel names, if it contains "Call", it will be displayed as a phone call on the voice overlay)\
+Step 4: Install ws_server\
 Step 5: Install TeamSpeak3 Plugin
 
 ## API Reference
