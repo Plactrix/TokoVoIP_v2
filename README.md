@@ -43,10 +43,10 @@ Our To-Do List:<br />
 • Rewrite ws_server with updated dependencies\
 • Change default download URL in FiveM script config.lua & Completely redo it and organise it\
 • Change default talk range in FiveM script config.lua\
-• 
+• Rework the connection pop up screen
 
 
-If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or DM me on Discord (Plactrix#0001)
+If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or DM join our Discord server ([discord.gg/DEQ95eVmQ3](https://discord.gg/DEQ95eVmQ3))
 
 If you like TokoVoIP, feel free to leave the original creator a donation ([Itokoyamato](https://github.com/Itokoyamato/TokoVOIP_TS3)):<br/><br/>
 [![Patreon](https://img.shields.io/badge/Become%20a-patron-orange)](https://www.patreon.com/Itokoyamato)
@@ -79,11 +79,10 @@ If you are not automatically connected, you can use the buttons in `Plugins -> T
 ### Step 2: Setting up tokovoip_script
   * Download tokovoip_script from the [Releases](https://github.com/Plactrix/TokoVoIP_v2/releases) page
   * Extract it in your fivem resources folder
-  * Open [tokovoip_script/c_config.lua](https://github.com/Plactrix/TokoVoIP_v2/blob/master/fivem_script/tokovoip_script/c_config.lua)
+  * Open [tokovoip_script/config.lua](https://github.com/Plactrix/TokoVoIP_v2/blob/master/fivem_script/tokovoip_script/config.lua)
     * Edit `wsServer` with the `IP:PORT` you copied from the ws-server console in [**Step 1: Setting up the ws-server**](#step-1-setting-up-the-ws-server)
     * Edit the `TSChannel` to match your Teamspeak configuration
     * Edit other settings to your preferences
-  * Open and edit [s_config.lua](https://github.com/Plactrix/TokoVoIP_v2/blob/master/fivem_script/tokovoip_script/s_config.lua) to your preference
   * Add `TokoVoIP` to your waiting channel name on your teamspeak server, it is [**case insensitive**](https://www.yourdictionary.com/case-insensitive)
 
 ## Setting up ws-server as a standalone NodeJS application
