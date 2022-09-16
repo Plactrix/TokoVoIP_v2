@@ -1,19 +1,14 @@
 
-# Setting up
-The script must be placed in a folder named `tokovoip_script` (NUI restriction)
-
-You can edit the voip configuration in `c_config.lua`
-
-You can edit the radio channels in `s_config.lua`  
-If the channel name contains 'Call' it will be displayed as a call on the ingame overlay
+# Installation
+Step 1: Download the latest version of tokovoip-script.zip from the releases section
+Step 2: Upload it to your server's resources folder
+Step 3: Configure all options in config.lua to fit your servers needs (Note: When configuring channel names, if it contains "Call", it will be displayed as a phone call on the voice overlay)
+Step 4: Install ws_server
+Step 5: Install TeamSpeak3 Plugin
 
 ## API Reference
----------------------------------------------------------------
-
-***Currently, the radio channels interaction must be done via the client***
 
 ## Client exports
-
 - ### addPlayerToRadio(channel)
 
   Adds the player to a radio channel
@@ -163,3 +158,6 @@ If the channel name contains 'Call' it will be displayed as a call on the ingame
     <td>Changes the radio volume</td>
   </tr>
   </table>
+
+
+Note: Exports will always remain the same, although this README.md will be changed and updated often as we further develop TokoVoIP
