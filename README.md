@@ -41,6 +41,7 @@ Our To-Do List:<br />
 - [ ] Change default talk ranges in FiveM script config.lua
 - [ ] Add exports for mumble-voip and pma-voice
 - [ ] Rework the connection pop up screen
+- [ ] Change voice proximity key from static to bind-able
 
 Our Known-Bugs List:<br />
 • ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.\
