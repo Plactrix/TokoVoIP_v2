@@ -42,7 +42,9 @@ AddEventHandler("TokoVoip:addPlayerToRadio", function(channelId, playerServerId,
 	end
 
 	channels[channelId].subscribers[playerServerId] = playerServerId
-	print("Added [" .. playerServerId .. "] " .. (GetPlayerName(playerServerId) or "") .. " to channel " .. channelId)
+	if enableDebug then
+		print("Added [" .. playerServerId .. "] " .. (GetPlayerName(playerServerId) or "") .. " to channel " .. channelId)
+	end
 
 	for _, subscriberServerId in pairs(channels[channelId].subscribers) do
 		if subscriberServerId ~= playerServerId then
@@ -63,7 +65,9 @@ AddEventHandler("TokoVoip:removePlayerFromRadio", function(channelId, playerServ
 				channels[channelId] = nil
 			end
 		end
-		print("Removed [" .. playerServerId .. "] " .. (GetPlayerName(playerServerId) or "") .. " from channel " .. channelId)
+		if enableDebug then
+			print("Removed [" .. playerServerId .. "] " .. (GetPlayerName(playerServerId) or "") .. " from channel " .. channelId)
+		end
 
 		-- Tell unsubscribed player he's left the channel as well
 		TriggerClientEvent("TokoVoip:onPlayerLeaveChannel", playerServerId, channelId, playerServerId)
@@ -95,7 +99,7 @@ end)
 
 -- Add Event Handlers
 AddEventHandler("playerDropped", function()
-	removePlayerFromAllRadio(source)
+	TriggerEvent("TokoVoip:removePlayerFromAllRadio", source)
 	playersData[source] = nil
 	TriggerEvent("Tokovoip:refreshAllPlayerData", true)
 end)
@@ -104,7 +108,9 @@ AddEventHandler("onResourceStart", function(resource)
 	if resource ~= GetCurrentResourceName() then
 		return
 	end
-    print([[
+
+	local vText = nil
+	local base = [[
    ^5_____________________________________________________________
   ^5| ^8 _____     _      __     __   ___ ____   __     ______      ^5|
   ^5| ^8|_   _|__ | | ____\ \   / /__|_ _|  _ \  \ \   / /___ \     ^5|
@@ -114,10 +120,39 @@ AddEventHandler("onResourceStart", function(resource)
   ^5|                                                             ^5|
   ^5|   ^7By ^3Itokoyamato^7, ^1Plactrix ^7and ^4Neon                         ^5|
   ^5|_____________________________________________________________^5|
-  ^5| TokoVoIP V2: Starting up                                    |
-	 ^5| - Successfully connected to TS                              |
-	 ^5| - Connected to Websocket Server                             |
-	 ^5| - TokoVoIP is ready for use!                                |
-	 ^5|_____________________________________________________________|^7
-    ]])
+    ]]
+	local info = [[
+   ^5_____________________________________________________________
+  ^5| ^1TokoVoIP V2^7: Starting up                                    ^5|
+	 %s
+	 %s
+	 %s
+	 ^5|_____________________________________________________________|^7    
+	]]
+
+	Wait(1000)
+
+	PerformHttpRequest("https://raw.githubusercontent.com/Plactrix/versions/main/tokovoip.json", function(code, res, _)
+		if code == 200 then
+			local data = json.decode(res)
+            if data["version"] ~= GetResourceMetadata(GetCurrentResourceName(), "version") then
+				vText = "^5| ^7- ^1TokoVoIP is outdated! Version " .. data["version"] .. " is now available.     ^5|"
+			elseif data["version"] == GetResourceMetadata(GetCurrentResourceName(), "version") then
+				vText = "^5| ^7- TokoVoIP is ^2up-to-date^7!                                   ^5|"
+			end
+		end
+	end, "GET")
+
+	PerformHttpRequest(Config.wsServer, function(code, _, _)
+		if code == 200 then
+			wsText = "^5| ^7- ^2Connected ^7to WebSocket Server!                            ^5|"
+		else
+			wsText = "^5| ^7- ^1Unable to connect to WebSocket Server!                    ^5|"
+		end
+	end, "GET")
+
+	Wait(250)
+
+	print(base)
+	print(info:format(vText, wsText, "^5| ^7- ^2TokoVoIP is ready for use!                                ^5|"))
 end)
