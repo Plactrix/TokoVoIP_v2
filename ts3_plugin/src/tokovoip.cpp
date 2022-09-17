@@ -29,7 +29,7 @@ Tokovoip *tokovoip;
 using WsClient = SimpleWeb::SocketClient<SimpleWeb::WS>;
 
 // Endpoint of your Handshake Server
-string handshakeServer = "https://master.tokovoip.platrix.net";
+string handshakeServer = "https://master.tokovoip.itokoyamato.net";
 
 int isRunning = 0;
 
