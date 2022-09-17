@@ -31,16 +31,15 @@ Here are some of the TokoVoIP V2 features:<br />
 ㅤand much more!
 
 Our To-Do List:<br />
-• Add an export to set toko disabled (Useful for things such as if a player is dead or if you want to setup a range disconnect type system)\
-• Add interior voice effects (such as an echo in a big room)\
-• Add a build-in or standalone radio system for toko\
-• Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers)\
-• Make the blocking screen toggle-able in the config\
-• Completely recode the TS3 Plugin to use more modern modules\
-• Completely add a config option for if you want to use client-sided radio clicks or server-sided ones\
-• Rewrite ws_server with updated dependencies\
-• Change default talk ranges in FiveM script config.lua\
-• Rework the connection pop up screen
+- [ ] Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers)\
+- [ ] Make the blocking screen toggle-able in the config\
+- [ ] Completely recode the TS3 Plugin to use more modern modules\
+- [x] ~~Remove NUI voice text and move it to DrawText, or further just optimize it~~\
+- [ ] Completely add a config option for if you want to use client-sided radio clicks or server-sided ones\
+- [ ] Rewrite ws_server with updated dependencies\
+- [x] ~~Completely redo and organize the config.lua~~\
+- [ ] Change default talk ranges in FiveM script config.lua\
+- [ ] Rework the connection pop up screen
 
 Our Known-Bugs List:<br />
 • ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.\
