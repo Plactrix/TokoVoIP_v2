@@ -31,26 +31,23 @@ Here are some of the TokoVoIP V2 features:<br />
 ㅤand much more!
 
 Our To-Do List:<br />
-• Add an export to set toko disabled (Useful for things such as if a player is dead or if you want to setup a tunnel type system)\
+• Add an export to set toko disabled (Useful for things such as if a player is dead or if you want to setup a range disconnect type system)\
 • Add interior voice effects (such as an echo in a big room)\
 • Add a build-in or standalone radio system for toko\
-• Create an external program so you can connect to toko's radio frequencies (Useful for dispatch)\
-• Make the blocking screen toggle-able\
-• Create a more user-friendly configuration\
-• Completely recode the TS3 Plugin to use more modern modules (this will also allow for an easier way to compile it)\
-• Remove NUI voice text, move it to DrawText (better performance-wise)\
-• Completely remove client-sided radio clicks and add server-sided ones in replacement\
+• Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers)\
+• Make the blocking screen toggle-able in the config\
+• Completely recode the TS3 Plugin to use more modern modules\
+• Remove NUI voice text and move it to DrawText, or further just optimize it\
+• Completely add a config option for if you want to use client-sided radio clicks or server-sided ones\
 • Rewrite ws_server with updated dependencies\
-• Completely redo it and organize the config.lua\
-• Change default talk range in FiveM script config.lua\
-• Rework the connection pop up screen\
-• Add support on TeamSpeak Plugin for Windows 32bit (because some people still use that apparently lol)
+• Completely redo and organize the config.lua\
+• Change default talk ranges in FiveM script config.lua\
+• Rework the connection pop up screen
 
 Our Known-Bugs List:<br />
-• TeamSpeak3 Plugin does not work on certain machines, I am still looking into this and will post an update when its fixed. This is currently our number 1 priority.\
-• ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization. This is number 2 on our priority list\
+• ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.\
 • Not a bug, but I just thought i'd throw it in here, the FiveM script doesn't have a blocking screen, it just has a transparent pop up with the TokoVoIP information. I will be adding an option in the configuration to toggle this.\
-If you find any more bugs, feel free to open an issue on Github, or let us know in our Discord server below
+If you find any more bugs, feel free to open an issue on Github, or let us know in our Discord server
 
 
 If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or join our Discord server ([discord.gg/DEQ95eVmQ3](https://discord.gg/DEQ95eVmQ3))
@@ -104,11 +101,11 @@ ws-server can be setup as a standalone NodeJS application if required. You may r
   A module such as `systemd`, `pm2` or `screen` can be used to run the ws-server application in the background
 
 ## Onesync Infinity
-Onesync infinity is supported with all TokoVoIP versions
+Onesync infinity is supported with all TokoVoIP V2 versions
 One thing to keep in mind, Teamspeak servers by default silence everyone when more than 100 users are in a channel  
 If your server has more then 100 slots, make sure your teamspeak server is configured properly:
 * Right click your teamspeak server
-* Press `Edit virtual server`
+* Press `Edit Virtual Server`
 * Press `more`
 * Open tab `Misc`
 * Change the value of `Min clients in channel before silence`  
@@ -144,7 +141,7 @@ Once the fivem websocket & ts3 websocket successfully handshaked, the master ser
 ## Building the TS3 plugin
 
 You will need the following installed:
-- [Visual Studio IDE](https://visualstudio.microsoft.com/vs/) (I use v17 2015)
+- [Visual Studio v15 2017](https://visualstudio.microsoft.com/vs/)
 - [Qt 5.12.7](https://download.qt.io/archive/qt/5.12/5.12.7/)
 - [CMake](https://cmake.org/)
 
