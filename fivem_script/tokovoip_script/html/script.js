@@ -337,7 +337,7 @@ function updateConfig (payload) {
 	voip = payload;
 	document.getElementById('TSServer').innerHTML = `TeamSpeak server: <font color="#01b0f0">${voip.plugin_data.TSServer}</font>`;
 	document.getElementById('TSChannel').innerHTML = `TeamSpeak channel: <font color="#01b0f0">${(voip.plugin_data.TSChannelWait) ? voip.plugin_data.TSChannelWait.replace(/\[[a-z]spacer(.*?)\]/, '') : voip.plugin_data.TSChannel.replace(/\[[a-z]spacer(.*?)\]/, '')}</font>`;
-	document.getElementById('TSDownload').innerHTML = `TS3 Plugin: <font color="#01b0f0">${voip.plugin_data.TSDownload}/</font>`;
+	document.getElementById('TSDownload').innerHTML = `TS3 Plugin: <font color="#01b0f0">${voip.plugin_data.TSDownload}</font>`;
 	document.getElementById('pluginVersion').innerHTML = `Plugin version: <font color="red">Not found</font> (Minimal version: ${voip.minVersion})`;
 }
 
