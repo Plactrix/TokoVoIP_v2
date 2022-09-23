@@ -38,7 +38,7 @@ Our To-Do List:<br />
 - [x] ~~Add server-sided radio clicks instead of client-side radio clicks~~
 - [ ] Rewrite ws_server with updated dependencies
 - [x] ~~Completely redo and organize the config.lua~~
-- [ ] Change default talk ranges in FiveM script config.lua (NEXT UPDATE)
+- [x] ~~Change default talk ranges in FiveM script config.lua~~
 - [ ] Add exports for mumble-voip and pma-voice (NEXT UPDATE)
 - [ ] Rework the connection pop up screen (NEXT UPDATE)
 - [x] ~~Change voice proximity key from static to bind-able~~
