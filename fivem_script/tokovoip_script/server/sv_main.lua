@@ -56,6 +56,11 @@ AddEventHandler("TokoVoip:addPlayerToRadio", function(channelId, playerServerId,
 	end
 end)
 
+RegisterServerEvent("TokoVoip:MicClicks:Sync")
+AddEventHandler("TokoVoip:MicClicks:Sync", function(channelId)
+	TriggerClientEvent("TokoVoip:MicClicks:SyncCL", -1, channelId)
+end)
+
 RegisterServerEvent("TokoVoip:removePlayerFromRadio")
 AddEventHandler("TokoVoip:removePlayerFromRadio", function(channelId, playerServerId)
 	if channels[channelId] and channels[channelId].subscribers[playerServerId] then
