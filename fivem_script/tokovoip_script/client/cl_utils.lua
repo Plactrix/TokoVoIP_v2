@@ -17,7 +17,8 @@ Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', 'CAPITAL')
+RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', Config.radioKey)
+RegisterKeyMapping('+cycleProximity', 'Changes proximity range for TokoVoIP', 'keyboard', Config.keyProximity)
 
 -- Events
 RegisterNetEvent("Tokovoip:setPlayerData")
@@ -203,12 +204,27 @@ function TokoVoip.initialize(self)
             StopAnimTask(PlayerPedId(), "random@arrests","generic_radio_chatter", -4.0)
         end
     end)
-    
+
+	RegisterCommand("-cycleProximity", function()
+	end)
+
+	RegisterCommand("+cycleProximity", function()
+		if not self.mode then
+			self.mode = 1
+		end
+		self.mode = self.mode + 1
+		if self.mode > 3 then
+			self.mode = 1
+		end
+		setPlayerData(self.serverId, "voip:mode", self.mode, true)
+		self:updateTokoVoipInfo()
+	end)
+ 
 	CreateThread(function()
 		while true do
 			Wait(5)
 			if ((self.keySwitchChannelsSecondary and IsControlPressed(0, self.keySwitchChannelsSecondary)) or not self.keySwitchChannelsSecondary) then
-				if (IsControlJustPressed(0, self.keySwitchChannels) and tablelength(self.myChannels) > 0) then
+				if IsControlJustPressed(0, self.keySwitchChannels) and tablelength(self.myChannels) > 0 then
 					local myChannels = {}
 					local currentChannel = 0
 					local currentChannelID = 0
@@ -229,16 +245,6 @@ function TokoVoip.initialize(self)
 					setPlayerData(self.serverId, "radio:channel", currentChannelID, true)
 					self:updateTokoVoipInfo()
 				end
-			elseif IsControlJustPressed(0, self.keyProximity) then
-				if not self.mode then
-					self.mode = 1
-				end
-				self.mode = self.mode + 1
-				if self.mode > 3 then
-					self.mode = 1
-				end
-				setPlayerData(self.serverId, "voip:mode", self.mode, true)
-				self:updateTokoVoipInfo()
 			end
 		end
 	end)
@@ -395,7 +401,7 @@ function setPlayerData(playerServerId, key, data, shared)
 		playersData[playerServerId] = {}
 	end
 	playersData[playerServerId][key] = {data = data, shared = shared}
-	if (shared) then
+	if shared then
 		TriggerServerEvent("Tokovoip:setPlayerData", playerServerId, key, data, shared)
 	end
 end
