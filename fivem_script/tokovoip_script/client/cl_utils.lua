@@ -137,29 +137,29 @@ function TokoVoip.initialize(self)
 	self:updateConfig()
 	self:updatePlugin("initializeSocket", self.wsServer)
 
-    RegisterNetEvent("TokoVoip:MicClicks:SyncCL")
-    AddEventHandler("TokoVoip:MicClicks:SyncCL", function(channelId)
-        if self.plugin_data.radioChannel == channelId then
-            SendNUIMessage({
-                transactionType = "playSound",
-                transactionFile  = "mic_click_off",
-                transactionVolume = 0.2
-            })
-        end
-    end)
+	RegisterNetEvent("TokoVoip:MicClicks:SyncCL")
+	AddEventHandler("TokoVoip:MicClicks:SyncCL", function(channelId)
+		if self.plugin_data.radioChannel == channelId then
+			SendNUIMessage({
+				transactionType = "playSound",
+				transactionFile  = "mic_click_off",
+				transactionVolume = 0.2
+			})
+		end
+	end)
 
 	RegisterCommand("+RadioTalk", function()
         if self.plugin_data.radioChannel ~= -1 and self.plugin_data.radioChannel ~= 0 then
             self.plugin_data.radioTalking = true
             self.plugin_data.localRadioClicks = false
-			if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") ~= "Call" then
-				SendNUIMessage({
-					transactionType = "playSound",
-					transactionFile  = "mic_click_on",
-					transactionVolume = 0.2
-				})
+            if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") ~= "Call" then
+                SendNUIMessage({
+                    transactionType = "playSound",
+                    transactionFile  = "mic_click_on",
+                    transactionVolume = 0.2
+                })
                 wastalkingonradio = true
-			end
+            end
                 if not getPlayerData(self.serverId, "radio:talking") then
                     setPlayerData(self.serverId, "radio:talking", true, true)
                 end
@@ -190,10 +190,10 @@ function TokoVoip.initialize(self)
 
     RegisterCommand("-RadioTalk", function()
         self.plugin_data.radioTalking = false
-		if wastalkingonradio then
-			TriggerServerEvent("TokoVoip:MicClicks:Sync", self.plugin_data.radioChannel)
-			wastalkingonradio = false
-		end
+        if wastalkingonradio then
+            TriggerServerEvent("TokoVoip:MicClicks:Sync", self.plugin_data.radioChannel)
+            wastalkingonradio = false
+        end
         if getPlayerData(self.serverId, "radio:talking") then
             setPlayerData(self.serverId, "radio:talking", false, true)
         end
@@ -204,9 +204,6 @@ function TokoVoip.initialize(self)
             StopAnimTask(PlayerPedId(), "random@arrests","generic_radio_chatter", -4.0)
         end
     end)
-
-	RegisterCommand("-cycleProximity", function()
-	end)
 
 	RegisterCommand("+cycleProximity", function()
 		if not self.mode then
@@ -219,6 +216,8 @@ function TokoVoip.initialize(self)
 		setPlayerData(self.serverId, "voip:mode", self.mode, true)
 		self:updateTokoVoipInfo()
 	end)
+	
+	RegisterCommand("-cycleProximity", function() end)
  
 	CreateThread(function()
 		while true do
