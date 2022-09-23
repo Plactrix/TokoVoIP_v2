@@ -35,13 +35,13 @@ Our To-Do List:<br />
 - [ ] Make the blocking screen toggle-able in the config (IN PROGRESS)
 - [ ] Completely recode the TS3 Plugin to use more modern modules
 - [x] ~~Remove NUI voice text and move it to DrawText, or further just optimize it~~
-- [ ] Completely add a config option for if you want to use client-sided radio clicks or server-sided ones (NEXT UPDATE)
+- [x] ~~Add server-sided radio clicks instead of client-side radio clicks~~
 - [ ] Rewrite ws_server with updated dependencies
 - [x] ~~Completely redo and organize the config.lua~~
 - [ ] Change default talk ranges in FiveM script config.lua (NEXT UPDATE)
 - [ ] Add exports for mumble-voip and pma-voice (NEXT UPDATE)
 - [ ] Rework the connection pop up screen (NEXT UPDATE)
-- [ ] Change voice proximity key from static to bind-able (NEXT UPDATE)
+- [x] ~~Change voice proximity key from static to bind-able~~
 - [ ] Add routing bucket support (IN PROGRESS)
 
 Our Known-Bugs List:<br />
