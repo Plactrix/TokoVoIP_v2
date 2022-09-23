@@ -131,7 +131,7 @@ async function init(address, serverId) {
 	};
 
 	websocket.onclose = () => {
-		sendData('disconnect');
+
 		disconnect('FiveM')
         if (voip.enableDebug) {
 			console.log('FiveM Disconnected')
