@@ -6,9 +6,9 @@ Config = {
     enableDebug = false, -- Enable or disable tokovoip debug (Shift+9)
 
     distance = {
-        5, -- Whisper speech distance in gta distance units
-        15, -- Normal speech distance in gta distance units
-        40, -- Shout speech distance in gta distance units
+        2, -- Whisper speech distance in gta distance units
+        5, -- Normal speech distance in gta distance units
+        7, -- Shouting speech distance in gta distance units
     },
     headingType = 0, -- headingType 0 uses GetGameplayCamRot, basing heading on the camera's heading, to match how other GTA sounds work. headingType 1 uses GetEntityHeading which is based on the character's direction
     radioKey = "CAPITAL", -- Keybind used to talk on the radio
@@ -19,7 +19,7 @@ Config = {
     radioAnim = true, -- Enable or disable the radio animation
     radioEnabled = true, -- Enable or disable using the radio
     wsServer = "xxx.xxx.xxx.xxx:xxxxx", -- IPv4 and Port of your ws_server install
-		displayWSInfo = true, -- Enable or disable the WS info on the blocking screen, used to manually connect in TeamSpeak
+    displayWSInfo = true, -- Enable or disable the WS info on the blocking screen, used to manually connect in TeamSpeak
 
     plugin_data = {
         -- TeamSpeak channel name used by the voip
