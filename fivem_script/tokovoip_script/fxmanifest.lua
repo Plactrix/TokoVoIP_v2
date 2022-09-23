@@ -14,6 +14,11 @@ files {
 
 ui_page "html/index.html"
 
+provide {
+	"mumble-voip",
+	"pma-voice"
+}
+
 shared_scripts {
     "config.lua"
 }
