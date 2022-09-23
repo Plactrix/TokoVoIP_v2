@@ -68,6 +68,20 @@
       </style>
       <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
       <script src="script.js" type="text/javascript"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js" type="text/javascript"></script>
+      <script>
+         var audioPlayer = null;
+         window.addEventListener('message', function(event) {
+           if (event.data.transactionType == "playSound") {		
+             if (audioPlayer != null) {
+                audioPlayer.pause();
+              }
+              audioPlayer = new Howl({src: ["./sounds/" + event.data.transactionFile + ".wav"]});
+              audioPlayer.volume(event.data.transactionVolume);
+              audioPlayer.play();
+            }
+		  });
+        </script>
    </head>
    <body>
       <div id="pluginScreen" class="pluginScreen">
@@ -91,9 +105,9 @@
                <div id="TSChannel">
                   TeamSpeak channel:
                </div>
-							<div id="wsInfo">
-									WS Server:
-							</div>
+               <div id="wsInfo">
+                  WS Server address:
+               </div>
                <div id="TSDownload">
                   TS3 Plugin Download:
                </div>
