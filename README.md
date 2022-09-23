@@ -32,17 +32,17 @@ Here are some of the TokoVoIP V2 features:<br />
 
 Our To-Do List:<br />
 - [ ] Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers)
-- [ ] Make the blocking screen toggle-able in the config
+- [ ] Make the blocking screen toggle-able in the config (IN PROGRESS)
 - [ ] Completely recode the TS3 Plugin to use more modern modules
 - [x] ~~Remove NUI voice text and move it to DrawText, or further just optimize it~~
-- [ ] Completely add a config option for if you want to use client-sided radio clicks or server-sided ones
+- [ ] Completely add a config option for if you want to use client-sided radio clicks or server-sided ones (NEXT UPDATE)
 - [ ] Rewrite ws_server with updated dependencies
 - [x] ~~Completely redo and organize the config.lua~~
-- [ ] Change default talk ranges in FiveM script config.lua
-- [ ] Add exports for mumble-voip and pma-voice
-- [ ] Rework the connection pop up screen
-- [ ] Change voice proximity key from static to bind-able
-- [ ] Add routing bucket support
+- [ ] Change default talk ranges in FiveM script config.lua (NEXT UPDATE)
+- [ ] Add exports for mumble-voip and pma-voice (NEXT UPDATE)
+- [ ] Rework the connection pop up screen (NEXT UPDATE)
+- [ ] Change voice proximity key from static to bind-able (NEXT UPDATE)
+- [ ] Add routing bucket support (IN PROGRESS)
 
 Our Known-Bugs List:<br />
 • ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.\
