@@ -20,6 +20,7 @@ Config = {
     radioEnabled = true, -- Enable or disable using the radio
     wsServer = "xxx.xxx.xxx.xxx:xxxxx", -- IPv4 and Port of your ws_server install
     displayWSInfo = true, -- Enable or disable the WS info on the blocking screen, used to manually connect in TeamSpeak
+    enableBlockingScreen = false, -- Enable or Disable the black background on the blocking screen
 
     plugin_data = {
         -- TeamSpeak channel name used by the voip
