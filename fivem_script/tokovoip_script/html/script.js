@@ -58,6 +58,9 @@ function disconnect (src) {
 			displayPluginScreen(true);
 		}, 5000);
 	}
+	if (voip.enableBlockingScreen) {
+		document.getElementById("pluginScreen").style.backgroundImage = "radial-gradient(rgb(23, 23, 23), rgb(0, 0, 0)";
+	}
 }
 
 let clientIPTimeout;
@@ -269,6 +272,9 @@ function isPluginVersionCorrect () {
 
 function displayPluginScreen (toggle) {
 	document.getElementById('pluginScreen').style.display = (toggle) ? 'block' : 'none';
+	if (voip.enableBlockingScreen && toggle) {
+		document.getElementById("pluginScreen").style.backgroundImage = "radial-gradient(rgb(23, 23, 23), rgb(0, 0, 0)";
+	}
 }
 
 function updateTokovoipInfo (msg) {
@@ -338,10 +344,7 @@ function updateConfig (payload) {
 	document.getElementById('TSDownload').innerHTML = `TS3 Plugin: <font color="#01b0f0">${voip.plugin_data.TSDownload}</font>`;
 	document.getElementById('pluginVersion').innerHTML = `Plugin version: <font color="red">Not found</font> (Minimal version: ${voip.minVersion})`;
 	document.getElementById('wsInfo').style.display = voip.displayWSInfo ? 'block' : 'none';
-	document.getElementById('wsInfo').innerHTML = `WS Server address: <font color="#01b0f0">${voip.wsServer}</font><br>(Use this to manually connect on TeamSpeak, plugins->TokoVOIP->Connect (Manual))`;
-	if (voip.enableBlockingScreen) {
-		document.getElementById("pluginScreen").style.backgroundImage = "radial-gradient(rgb(23, 23, 23), rgb(0, 0, 0)";
-	}
+	document.getElementById('wsInfo').innerHTML = `WS Server address: <font color="#01b0f0">${voip.wsServer}</font>`;
 }
 
 function updatePlugin () {
