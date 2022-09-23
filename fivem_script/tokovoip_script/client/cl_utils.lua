@@ -63,11 +63,11 @@ function TokoVoip.loop(self)
 
 			self.lastNetworkUpdate = self.lastNetworkUpdate + self.refreshRate
 			self.lastPlayerListUpdate = self.lastPlayerListUpdate + self.refreshRate
-			if (self.lastNetworkUpdate >= self.networkRefreshRate) then
+			if self.lastNetworkUpdate >= self.networkRefreshRate then
 				self.lastNetworkUpdate = 0
 				self:updateTokoVoipInfo()
 			end
-			if (self.lastPlayerListUpdate >= self.playerListRefreshRate) then
+			if self.lastPlayerListUpdate >= self.playerListRefreshRate then
 				self.playerList = GetActivePlayers()
 				self.lastPlayerListUpdate = 0
 			end
@@ -75,12 +75,14 @@ function TokoVoip.loop(self)
 	end)
 end
 
-function TokoVoip.sendDataToTS3(self) -- Send usersdata to the Javascript Websocket
-	if (self.pluginStatus == -1) then return end
+function TokoVoip.sendDataToTS3(self)
+	if self.pluginStatus == -1 then
+		return
+	end
 	self:updatePlugin("updateTokoVoip", self.plugin_data)
 end
 
-function TokoVoip.updateTokoVoipInfo(self, forceUpdate) -- Update the top-left info
+function TokoVoip.updateTokoVoipInfo(self, forceUpdate)
 	local info = ""
     if self.mode == 1 then
 		info = "Whispering"
@@ -112,8 +114,8 @@ end
 
 function TokoVoip.updatePlugin(self, event, payload)
 	SendNUIMessage({
-			type = event,
-			payload = payload
+		type = event,
+		payload = payload
 	})
 end
 
@@ -133,13 +135,28 @@ end
 function TokoVoip.initialize(self)
 	self:updateConfig()
 	self:updatePlugin("initializeSocket", self.wsServer)
-    
+
+    RegisterNetEvent("TokoVoip:MicClicks:SyncCL")
+    AddEventHandler("TokoVoip:MicClicks:SyncCL", function(channelId)
+        if self.plugin_data.radioChannel == channelId then
+            SendNUIMessage({
+                transactionType = "playSound",
+                transactionFile  = "mic_click_off",
+                transactionVolume = 0.2
+            })
+        end
+    end)
+
 	RegisterCommand("+RadioTalk", function()
         if self.plugin_data.radioChannel ~= -1 and self.plugin_data.radioChannel ~= 0 then
             self.plugin_data.radioTalking = true
             self.plugin_data.localRadioClicks = false
 			if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") ~= "Call" then
-                TriggerServerEvent("InteractSound_SV:PlayOnSource", "mic_click_on", 0.2)
+				SendNUIMessage({
+					transactionType = "playSound",
+					transactionFile  = "mic_click_on",
+					transactionVolume = 0.2
+				})
                 wastalkingonradio = true
 			end
                 if not getPlayerData(self.serverId, "radio:talking") then
@@ -173,7 +190,7 @@ function TokoVoip.initialize(self)
     RegisterCommand("-RadioTalk", function()
         self.plugin_data.radioTalking = false
 		if wastalkingonradio then
-        	TriggerServerEvent("InteractSound_SV:PlayOnSource", "mic_click_off", 0.2)
+			TriggerServerEvent("TokoVoip:MicClicks:Sync", self.plugin_data.radioChannel)
 			wastalkingonradio = false
 		end
         if getPlayerData(self.serverId, "radio:talking") then
@@ -188,9 +205,8 @@ function TokoVoip.initialize(self)
     end)
     
 	CreateThread(function()
-		while (true) do
+		while true do
 			Wait(5)
-
 			if ((self.keySwitchChannelsSecondary and IsControlPressed(0, self.keySwitchChannelsSecondary)) or not self.keySwitchChannelsSecondary) then
 				if (IsControlJustPressed(0, self.keySwitchChannels) and tablelength(self.myChannels) > 0) then
 					local myChannels = {}
@@ -290,7 +306,7 @@ function draw3dtext(text, posX, posY, posZ, r, g, b, a)
 	end
 end
 
-function table.val_to_str (v)
+function table.val_to_str(v)
 	if "string" == type(v) then
 		v = string.gsub(v, "\n", "\\n")
 		if string.match(string.gsub(v, "[^'\"]", ""), '^"+$') then
@@ -302,7 +318,7 @@ function table.val_to_str (v)
 	end
 end
 
-function table.key_to_str (k)
+function table.key_to_str(k)
 	if "string" == type(k) and string.match(k, "^[_%a][_%a%d]*$") then
 		return k
 	else
@@ -312,6 +328,7 @@ end
 
 function table.tostring(tbl)
 	local result, done = {}, {}
+
 	for k, v in ipairs(tbl) do
 		table.insert(result, table.val_to_str(v))
 		done[k] = true
@@ -321,6 +338,7 @@ function table.tostring(tbl)
 			table.insert(result, table.key_to_str(k).."="..table.val_to_str(v))
 		end
 	end
+
 	return "{"..table.concat(result, ",").."}"
 end
 
