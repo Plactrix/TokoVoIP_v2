@@ -57,7 +57,7 @@ If you like TokoVoIP, feel free to leave the original creator a donation ([Itoko
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=H2UXEZBF5KQBL&source=url)  
 
 # TokoVoIP Installation
-Firstly, you will need to head over to the [Releases](https://github.com/Plactrix/TokoVoIP_v2/releases) page and download ws-server, tokovoip_script and tokovoip-2.0.0.ts3_plugin
+Firstly, you will need to head over to the [Releases](https://github.com/Plactrix/TokoVoIP_v2/releases) page and download ws-server, tokovoip_script and tokovoip-x.x.x.ts3_plugin
 
 ## Setting up the TeamSpeak3 plugin
 Every player must install Teamspeak 3 and the TokoVoIP plugin for the script to work correctly
