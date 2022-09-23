@@ -11,10 +11,10 @@ Config = {
         40, -- Shout speech distance in gta distance units
     },
     headingType = 0, -- headingType 0 uses GetGameplayCamRot, basing heading on the camera's heading, to match how other GTA sounds work. headingType 1 uses GetEntityHeading which is based on the character's direction
-    radioKey = 137, -- Keybind used to talk on the radio
+    radioKey = "CAPITAL", -- Keybind used to talk on the radio
     keySwitchChannels = 20, -- Keybind used to switch the radio channels
     keySwitchChannelsSecondary = 21, -- If set, both the keySwitchChannels and keySwitchChannelsSecondary keybinds must be pressed to switch the radio channels
-    keyProximity = 47, -- Keybind used to switch the proximity mode
+    keyProximity = "G", -- Keybind used to switch the proximity mode
     radioClickMaxChannel = 99, -- Set the max amount of radio channels that will have local radio clicks enabled
     radioAnim = true, -- Enable or disable the radio animation
     radioEnabled = true, -- Enable or disable using the radio
