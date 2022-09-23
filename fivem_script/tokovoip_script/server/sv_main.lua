@@ -110,6 +110,8 @@ AddEventHandler("onResourceStart", function(resource)
 	end
 
 	local vText = nil
+	local wsText = nil
+	local ReadyToUseText = nil
 	local base = [[
    ^5_____________________________________________________________
   ^5| ^8 _____     _      __     __   ___ ____   __     ______      ^5|
@@ -151,8 +153,20 @@ AddEventHandler("onResourceStart", function(resource)
 		end
 	end, "GET")
 
-	Wait(250)
+	while vText == nil do
+		Wait(5)
+	end
+
+	while wsText == nil do
+		Wait(5)
+	end
+
+	if not string.find(wsText, "Unable") then
+		ReadyToUseText = "^5| ^7- ^2TokoVoIP is ready for use!                                ^5|"
+	else
+		ReadyToUseText = "^5| ^7- ^1TokoVoIP is NOT ready for use                             ^5|"
+	end
 
 	print(base)
-	print(info:format(vText, wsText, "^5| ^7- ^2TokoVoIP is ready for use!                                ^5|"))
+	print(info:format(vText, wsText, ReadyToUseText))
 end)
