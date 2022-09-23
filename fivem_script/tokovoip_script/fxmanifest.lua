@@ -8,6 +8,7 @@ version "2.0.0"
 lua54 "yes"
 
 files {
+	"html/sounds/*.wav",
 	"html/index.html",
 	"html/script.js"
 }
