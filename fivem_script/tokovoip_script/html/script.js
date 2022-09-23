@@ -66,10 +66,9 @@ async function updateClientIP(endpoint) {
 		return;
 	}
 	if (voipStatus !== OK) {
-		const res = await fetch(`http://${endpoint}/getmyip`)
-		.catch(e => console.error('TokoVoIP: failed to fetch client IP', e));
-
-		if (res) {
+		const res = await fetch(`http://${endpoint}/getmyip`);
+		if (!res.ok) console.error(`TokoVOIP: failed to update cient IP (error: ${res.status})`);
+		else {
 			const ip = await res.text();
 			clientIp = ip;
             if (voip.enableDebug) {
