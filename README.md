@@ -38,11 +38,11 @@ Our To-Do List:<br />
 - [x] ~~Change voice proximity key from static to bind-able~~
 - [x] ~~Rework the connection pop up screen~~
 - [x] ~~Add routing bucket support~~
+- [x] ~~Add exports for mumble-voip and pma-voice~~
 - [ ] Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers)
 - [ ] Make the blocking screen toggle-able in the config (IN PROGRESS)
 - [ ] Completely recode the TS3 Plugin to use more modern modules
 - [ ] Rewrite ws_server with updated dependencies
-- [ ] Add exports for mumble-voip and pma-voice (NEXT UPDATE)
 
 Our Known-Bugs List:<br />
 • ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.\
