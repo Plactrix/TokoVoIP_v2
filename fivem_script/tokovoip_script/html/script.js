@@ -209,14 +209,7 @@ function receivedClientCall (event) {
 		} else if (eventName == 'toggleLatency') {
 			displayLatency = !displayLatency;
 			document.querySelector('#latency').style.display = (displayLatency) ? 'block' : 'none';
-		} else if (eventName == 'playSound') {
-			if (audioPlayer != null) {
-				audioPlayer.pause();
-			}
-			audioPlayer = new Howl({src: ["./sounds/" + event.data.transactionFile + ".wav"]});
-			audioPlayer.volume(event.data.transactionVolume);
-			audioPlayer.play();
-        }
+		}
 	}
 
 	checkPluginStatus();
