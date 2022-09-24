@@ -26,3 +26,18 @@ function randomString(length)
 	math.randomseed(os.time())
 	return randomString(length - 1) .. charset[math.random(1, #charset)]
 end
+
+function updateRoutingBucket(source, routingBucket)
+	local route = 0
+
+	if routingBucket then
+		SetPlayerRoutingBucket(source, routingBucket)
+		route = routingBucket
+	else
+		route = GetPlayerRoutingBucket(source)
+	end
+	TriggerClientEvent("TokoVoip:updateRoutingBucket", source, route)
+end
+
+-- Exports
+exports("updateRoutingBucket", updateRoutingBucket)
