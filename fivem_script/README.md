@@ -22,13 +22,29 @@ Step 5: Install TeamSpeak3 Plugin
   <tr>
     <td>channel</td>
     <td>number</td>
-    <td>Id of the radio channel</td>
+    <td>ID of the radio channel</td>
   </tr>
     <tr>
     <td>isRadio</td>
     <td>boolean</td>
     <td>If set to true, channel will be handled as a radio, false will handle the channel as a phone call</td>
   </tr>
+  </table>
+	
+- ### addPlayerToCall(channel)
+
+  Adds the player to a phone call
+
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>channel</td>
+    <td>number</td>
+    <td>ID of the call channel</td>
   </table>
 
 - ### removePlayerFromRadio(channel)
@@ -45,6 +61,23 @@ Step 5: Install TeamSpeak3 Plugin
     <td>channel</td>
     <td>number</td>
     <td>Id of the radio channel</td>
+  </tr>
+  </table>
+	
+- ### removePlayerFromCall(channel)
+
+  Removes the player from a phone call
+
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>channel</td>
+    <td>number</td>
+    <td>ID of the call channel</td>
   </tr>
   </table>
 
@@ -158,6 +191,90 @@ Step 5: Install TeamSpeak3 Plugin
     <td>Changes the radio volume</td>
   </tr>
   </table>
+	
+- ### setCallVolume(volume)
 
+  Changes the volume of voices over radio
 
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>volume</td>
+    <td>number</td>
+    <td>Changes the radio volume</td>
+  </tr>
+  </table>
+	
+- ### setRadioChannel(channel)
+
+  Changes the volume of voices over radio
+
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>channel</td>
+    <td>number</td>
+    <td>Sets your Radio Channel</td>
+  </tr>
+  </table>
+	
+- ### setCallChannel(channel)
+
+  Changes the volume of voices over radio
+
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>channel</td>
+    <td>number</td>
+    <td>Sets your Call Channel</td>
+  </tr>
+  </table>
+
+## Server Exports
+- ### updateRoutingBucket(route)
+
+  Changes the player's routing bucket
+
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>route</td>
+    <td>number</td>
+    <td>Changes the player's routing bucket</td>
+  </tr>
+  </table>
+
+- ### getPlayersInRadioChannel(channel)
+
+  Get a table of players that are on a radio channel
+
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>channel</td>
+    <td>number</td>
+    <td>Returns a table of the players who are connected to the channel</td>
+  </tr>
+  </table>
 Note: Exports will always remain the same, although this README.md will be changed and updated often as we further develop TokoVoIP

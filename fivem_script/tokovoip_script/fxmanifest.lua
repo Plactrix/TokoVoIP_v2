@@ -8,11 +8,17 @@ version "2.0.0"
 lua54 "yes"
 
 files {
+	"html/sounds/*.wav",
 	"html/index.html",
 	"html/script.js"
 }
 
 ui_page "html/index.html"
+
+provide {
+	"mumble-voip",
+	"pma-voice"
+}
 
 shared_scripts {
     "config.lua"

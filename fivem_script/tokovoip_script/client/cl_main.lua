@@ -1,7 +1,8 @@
 -- Defining Things
+local targetPed
 local useLocalPed = true
 local isRunning = false
-local scriptVersion = "2.0.0"
+local scriptVersion = "2.0.1"
 local animStates = {}
 local displayingPluginScreen = false
 local HeadBone = 0x796e
@@ -37,6 +38,7 @@ AddEventHandler("initializeVoip", function()
 	voip.talking = false
 	voip.pluginStatus = -1
 	voip.pluginVersion = "0"
+	voip.routingBucket = 0
 	voip.serverId = GetPlayerServerId(PlayerId())
 	voip.myChannels = {}
 	setPlayerData(voip.serverId, "voip:mode", voip.mode, true)
@@ -45,6 +47,7 @@ AddEventHandler("initializeVoip", function()
 	setPlayerData(voip.serverId, "radio:talking", voip.plugin_data.radioTalking, true)
 	setPlayerData(voip.serverId, "voip:pluginStatus", voip.pluginStatus, true)
 	setPlayerData(voip.serverId, "voip:pluginVersion", voip.pluginVersion, true)
+	setPlayerData(voip.serverId, "voip:routingBucket", voip.routingBucket, true)
 	refreshAllPlayerData()
 	targetPed = PlayerPedId()
 
@@ -143,8 +146,14 @@ AddEventHandler("TokoVoip:onPlayerJoinChannel", function(channelId, playerServer
 	end
 end)
 
-RegisterNetEvent('TokoVoip:setRadioVolume')
-AddEventHandler('TokoVoip:setRadioVolume', setRadioVolume)
+RegisterNetEvent("TokoVoip:setRadioVolume")
+AddEventHandler("TokoVoip:setRadioVolume", setRadioVolume)
+
+RegisterNetEvent("TokoVoip:updateRoutingBucket")
+AddEventHandler("TokoVoip:updateRoutingBucket", function(routingBucket)
+	voip.routingBucket = routingBucket
+	setPlayerData(voip.serverId, "voip:routingBucket", voip.routingBucket, true)
+end)
 
 -- Add Event Handlers
 AddEventHandler("updateVoipTargetPed", function(newTargetPed, useLocal)
@@ -254,6 +263,7 @@ function clientProcessing()
 	local playerList = voip.playerList
 	local usersdata = {}
 	local ped = PlayerPedId()
+	local routingBucket = getPlayerData(GetPlayerServerId(PlayerId()), "voip:routingBucket")
 
 	if voip.headingType == 1 then
 		localHeading = math.rad(GetEntityHeading(ped))
@@ -273,6 +283,7 @@ function clientProcessing()
 		local playerPed = GetPlayerPed(player)
 
 		local playerTalking = getPlayerData(playerServerId, "voip:talking")
+        local playerRoutingBucket = getPlayerData(playerServerId, "voip:routingBucket") 
 
 		if GetConvar("gametype") == "gta5" then
 			setPlayerTalkingState(player, playerServerId)
@@ -285,10 +296,9 @@ function clientProcessing()
 		do
 			local playerPos = GetPedBoneCoords(playerPed, HeadBone)
 			local dist = #(localPos - playerPos)
-			if dist > voip.distance[3] then
+			if dist > voip.distance[3] and playerRoutingBucket == routingBucket then
 				goto continue
 			end
-
 
 			if not getPlayerData(playerServerId, "voip:mode") then
 				setPlayerData(playerServerId, "voip:mode", 1)
@@ -301,7 +311,7 @@ function clientProcessing()
 			if volume >= 0 then
 				volume = 0
 			end
-			--
+ 
 			local angleToTarget = localHeading - math.atan(playerPos.y - localPos.y, playerPos.x - localPos.x)
 
 			-- Set player's position
@@ -314,7 +324,6 @@ function clientProcessing()
 				posY = voip.plugin_data.enableStereoAudio and math.sin(angleToTarget) * dist or 0,
 				posZ = voip.plugin_data.enableStereoAudio and playerPos.z or 0
 			}
-			--
 
 			-- Process proximity
 			if dist >= voip.distance[mode] then
@@ -381,7 +390,23 @@ function addPlayerToRadio(channel, radio)
 	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, radio)
 end
 
+function addPlayerToCall(channel, radio)
+	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, false)
+end
+
+function setRadioChannel(channel, radio)
+	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, true)
+end
+
+function setCallChannel(channel, radio)
+	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, false)
+end
+
 function removePlayerFromRadio(channel)
+	TriggerServerEvent("TokoVoip:removePlayerFromRadio", channel, voip.serverId)
+end
+
+function removePlayerFromCall(channel)
 	TriggerServerEvent("TokoVoip:removePlayerFromRadio", channel, voip.serverId)
 end
 
@@ -394,6 +419,10 @@ function isPlayerInChannel(channel)
 end
 
 function setRadioVolume(volume)
+	radioVolume = volume
+end
+
+function setCallVolume(volume)
 	radioVolume = volume
 end
 
@@ -410,5 +439,10 @@ end
 -- Exports
 exports("addPlayerToRadio", addPlayerToRadio)
 exports("removePlayerFromRadio", removePlayerFromRadio)
+exports("removePlayerFromCall", removePlayerFromCall)
 exports("isPlayerInChannel", isPlayerInChannel)
 exports("setRadioVolume", setRadioVolume)
+exports("setCallVolume", setCallVolume)
+exports("setCallChannel", setCallChannel)
+exports("setRadioChannel", setRadioChannel)
+exports("addPlayerToCall", addPlayerToCall)

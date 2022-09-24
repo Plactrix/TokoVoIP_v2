@@ -1,10 +1,23 @@
--- Define Things
-TokoVoip = {}
-TokoVoip.__index = TokoVoip;
+-- Player Data
 local playersData = {}
-local functionSeen = {}
+function setPlayerData(playerServerId, key, data, shared)
+	if not key or data == nil then
+		return
+	end
+	if not playersData[playerServerId] then
+		playersData[playerServerId] = {}
+	end
+	playersData[playerServerId][key] = {data = data, shared = shared}
+	if shared then
+		TriggerServerEvent("Tokovoip:setPlayerData", playerServerId, key, data, shared)
+	end
+end
+
+
+-- Define Things
+TokoVoip = {};
+TokoVoip.__index = TokoVoip;
 local lastTalkState = false
-local wastalkingonradio = false
 Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
 	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
@@ -17,7 +30,8 @@ Keys = {
 	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
 }
 
-RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', 'CAPITAL')
+RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', Config.radioKey)
+RegisterKeyMapping('+cycleProximity', 'Changes proximity range for TokoVoIP', 'keyboard', Config.keyProximity)
 
 -- Events
 RegisterNetEvent("Tokovoip:setPlayerData")
@@ -63,11 +77,11 @@ function TokoVoip.loop(self)
 
 			self.lastNetworkUpdate = self.lastNetworkUpdate + self.refreshRate
 			self.lastPlayerListUpdate = self.lastPlayerListUpdate + self.refreshRate
-			if (self.lastNetworkUpdate >= self.networkRefreshRate) then
+			if self.lastNetworkUpdate >= self.networkRefreshRate then
 				self.lastNetworkUpdate = 0
 				self:updateTokoVoipInfo()
 			end
-			if (self.lastPlayerListUpdate >= self.playerListRefreshRate) then
+			if self.lastPlayerListUpdate >= self.playerListRefreshRate then
 				self.playerList = GetActivePlayers()
 				self.lastPlayerListUpdate = 0
 			end
@@ -75,12 +89,14 @@ function TokoVoip.loop(self)
 	end)
 end
 
-function TokoVoip.sendDataToTS3(self) -- Send usersdata to the Javascript Websocket
-	if (self.pluginStatus == -1) then return end
+function TokoVoip.sendDataToTS3(self)
+	if self.pluginStatus == -1 then
+		return
+	end
 	self:updatePlugin("updateTokoVoip", self.plugin_data)
 end
 
-function TokoVoip.updateTokoVoipInfo(self, forceUpdate) -- Update the top-left info
+function TokoVoip.updateTokoVoipInfo(self, forceUpdate)
 	local info = ""
     if self.mode == 1 then
 		info = "Whispering"
@@ -112,8 +128,8 @@ end
 
 function TokoVoip.updatePlugin(self, event, payload)
 	SendNUIMessage({
-			type = event,
-			payload = payload
+		type = event,
+		payload = payload
 	})
 end
 
@@ -133,13 +149,28 @@ end
 function TokoVoip.initialize(self)
 	self:updateConfig()
 	self:updatePlugin("initializeSocket", self.wsServer)
-    
+
+    RegisterNetEvent("TokoVoip:MicClicks:SyncCL")
+    AddEventHandler("TokoVoip:MicClicks:SyncCL", function(channelId)
+        if self.plugin_data.radioChannel == channelId then
+            SendNUIMessage({
+                transactionType = "playSound",
+                transactionFile  = "mic_click_off",
+                transactionVolume = 0.2
+            })
+        end
+    end)
+
 	RegisterCommand("+RadioTalk", function()
         if self.plugin_data.radioChannel ~= -1 and self.plugin_data.radioChannel ~= 0 then
             self.plugin_data.radioTalking = true
             self.plugin_data.localRadioClicks = false
 			if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") ~= "Call" then
-                TriggerServerEvent("InteractSound_SV:PlayOnSource", "mic_click_on", 0.2)
+				SendNUIMessage({
+					transactionType = "playSound",
+					transactionFile  = "mic_click_on",
+					transactionVolume = 0.2
+				})
                 wastalkingonradio = true
 			end
                 if not getPlayerData(self.serverId, "radio:talking") then
@@ -173,7 +204,7 @@ function TokoVoip.initialize(self)
     RegisterCommand("-RadioTalk", function()
         self.plugin_data.radioTalking = false
 		if wastalkingonradio then
-        	TriggerServerEvent("InteractSound_SV:PlayOnSource", "mic_click_off", 0.2)
+			TriggerServerEvent("TokoVoip:MicClicks:Sync", self.plugin_data.radioChannel)
 			wastalkingonradio = false
 		end
         if getPlayerData(self.serverId, "radio:talking") then
@@ -186,13 +217,27 @@ function TokoVoip.initialize(self)
             StopAnimTask(PlayerPedId(), "random@arrests","generic_radio_chatter", -4.0)
         end
     end)
-    
-	CreateThread(function()
-		while (true) do
-			Wait(5)
 
+	RegisterCommand("-cycleProximity", function()
+	end)
+
+	RegisterCommand("+cycleProximity", function()
+		if not self.mode then
+			self.mode = 1
+		end
+		self.mode = self.mode + 1
+		if self.mode > 3 then
+			self.mode = 1
+		end
+		setPlayerData(self.serverId, "voip:mode", self.mode, true)
+		self:updateTokoVoipInfo()
+	end)
+ 
+	CreateThread(function()
+		while true do
+			Wait(5)
 			if ((self.keySwitchChannelsSecondary and IsControlPressed(0, self.keySwitchChannelsSecondary)) or not self.keySwitchChannelsSecondary) then
-				if (IsControlJustPressed(0, self.keySwitchChannels) and tablelength(self.myChannels) > 0) then
+				if IsControlJustPressed(0, self.keySwitchChannels) and tablelength(self.myChannels) > 0 then
 					local myChannels = {}
 					local currentChannel = 0
 					local currentChannelID = 0
@@ -213,16 +258,6 @@ function TokoVoip.initialize(self)
 					setPlayerData(self.serverId, "radio:channel", currentChannelID, true)
 					self:updateTokoVoipInfo()
 				end
-			elseif IsControlJustPressed(0, self.keyProximity) then
-				if not self.mode then
-					self.mode = 1
-				end
-				self.mode = self.mode + 1
-				if self.mode > 3 then
-					self.mode = 1
-				end
-				setPlayerData(self.serverId, "voip:mode", self.mode, true)
-				self:updateTokoVoipInfo()
 			end
 		end
 	end)
@@ -290,7 +325,7 @@ function draw3dtext(text, posX, posY, posZ, r, g, b, a)
 	end
 end
 
-function table.val_to_str (v)
+function table.val_to_str(v)
 	if "string" == type(v) then
 		v = string.gsub(v, "\n", "\\n")
 		if string.match(string.gsub(v, "[^'\"]", ""), '^"+$') then
@@ -302,7 +337,7 @@ function table.val_to_str (v)
 	end
 end
 
-function table.key_to_str (k)
+function table.key_to_str(k)
 	if "string" == type(k) and string.match(k, "^[_%a][_%a%d]*$") then
 		return k
 	else
@@ -312,6 +347,7 @@ end
 
 function table.tostring(tbl)
 	local result, done = {}, {}
+
 	for k, v in ipairs(tbl) do
 		table.insert(result, table.val_to_str(v))
 		done[k] = true
@@ -321,6 +357,7 @@ function table.tostring(tbl)
 			table.insert(result, table.key_to_str(k).."="..table.val_to_str(v))
 		end
 	end
+
 	return "{"..table.concat(result, ",").."}"
 end
 
@@ -366,19 +403,6 @@ function SetTokoProperty(key, value)
 				end
 			end
 		end
-	end
-end
-
-function setPlayerData(playerServerId, key, data, shared)
-	if not key or data == nil then
-		return
-	end
-	if not playersData[playerServerId] then
-		playersData[playerServerId] = {}
-	end
-	playersData[playerServerId][key] = {data = data, shared = shared}
-	if (shared) then
-		TriggerServerEvent("Tokovoip:setPlayerData", playerServerId, key, data, shared)
 	end
 end
 

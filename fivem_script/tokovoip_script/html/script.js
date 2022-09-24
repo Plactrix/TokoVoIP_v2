@@ -58,27 +58,28 @@ function disconnect (src) {
 			displayPluginScreen(true);
 		}, 5000);
 	}
+	if (voip.enableBlockingScreen) {
+		document.getElementById("pluginScreen").style.backgroundImage = "radial-gradient(rgb(23, 23, 23), rgb(0, 0, 0)";
+	}
 }
 
+let clientIPTimeout;
 async function updateClientIP(endpoint) {
 	if (!endpoint) {
 		console.error('updateClientIP: endpoint missing');
 		return;
 	}
 	if (voipStatus !== OK) {
-		const res = await fetch(`http://${endpoint}/getmyip`)
-		.catch(e => console.error('TokoVoIP: failed to fetch client IP', e));
-
-		if (res) {
+		const res = await fetch(`http://${endpoint}/getmyip`);
+		if (!res.ok) console.error(`TokoVOIP: failed to update cient IP (error: ${res.status})`);
+		else {
 			const ip = await res.text();
 			clientIp = ip;
-            if (voip.enableDebug) {
-				console.log('TokoVoIP: updated client IP');
-            }
 			if (websocket && websocket.readyState === websocket.OPEN) websocket.send(`42${JSON.stringify(['updateClientIP', { ip: clientIp }])}`);
 		}
 	}
-	setTimeout(_ => updateClientIP(endpoint), 10000);
+	if (clientIPTimeout) clearTimeout(clientIPTimeout);
+	clientIPTimeout = setTimeout(_ => updateClientIP(endpoint), 10000);
 }
 
 async function init(address, serverId) {
@@ -132,7 +133,7 @@ async function init(address, serverId) {
 	};
 
 	websocket.onclose = () => {
-		sendData('disconnect');
+
 		disconnect('FiveM')
         if (voip.enableDebug) {
 			console.log('FiveM Disconnected')
@@ -199,18 +200,23 @@ function receivedClientCall (event) {
 		} else if (eventName == 'updateTokovoipInfo') {
 			if (connected)
 				updateTokovoipInfo(payload, 1);
-
 		} else if (eventName == 'updateTokoVoip') {
 			voip.plugin_data = payload;
 			updatePlugin();
-
 		} else if (eventName == 'disconnect') {
 			sendData('disconnect');
 			voipStatus = NOT_CONNECTED;
 		} else if (eventName == 'toggleLatency') {
 			displayLatency = !displayLatency;
 			document.querySelector('#latency').style.display = (displayLatency) ? 'block' : 'none';
-		}
+		} else if (eventName == 'playSound') {
+			if (audioPlayer != null) {
+				audioPlayer.pause();
+			}
+			audioPlayer = new Howl({src: ["./sounds/" + event.data.transactionFile + ".wav"]});
+			audioPlayer.volume(event.data.transactionVolume);
+			audioPlayer.play();
+        }
 	}
 
 	checkPluginStatus();
@@ -271,6 +277,9 @@ function isPluginVersionCorrect () {
 
 function displayPluginScreen (toggle) {
 	document.getElementById('pluginScreen').style.display = (toggle) ? 'block' : 'none';
+	if (voip.enableBlockingScreen && toggle) {
+		document.getElementById("pluginScreen").style.backgroundImage = "radial-gradient(rgb(23, 23, 23), rgb(0, 0, 0)";
+	}
 }
 
 function updateTokovoipInfo (msg) {
@@ -339,6 +348,8 @@ function updateConfig (payload) {
 	document.getElementById('TSChannel').innerHTML = `TeamSpeak channel: <font color="#01b0f0">${(voip.plugin_data.TSChannelWait) ? voip.plugin_data.TSChannelWait.replace(/\[[a-z]spacer(.*?)\]/, '') : voip.plugin_data.TSChannel.replace(/\[[a-z]spacer(.*?)\]/, '')}</font>`;
 	document.getElementById('TSDownload').innerHTML = `TS3 Plugin: <font color="#01b0f0">${voip.plugin_data.TSDownload}</font>`;
 	document.getElementById('pluginVersion').innerHTML = `Plugin version: <font color="red">Not found</font> (Minimal version: ${voip.minVersion})`;
+	document.getElementById('wsInfo').style.display = voip.displayWSInfo ? 'block' : 'none';
+	document.getElementById('wsInfo').innerHTML = `WS Server address: <font color="#01b0f0">${voip.wsServer}</font>`;
 }
 
 function updatePlugin () {

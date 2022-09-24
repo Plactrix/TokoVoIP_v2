@@ -56,6 +56,11 @@ AddEventHandler("TokoVoip:addPlayerToRadio", function(channelId, playerServerId,
 	end
 end)
 
+RegisterServerEvent("TokoVoip:MicClicks:Sync")
+AddEventHandler("TokoVoip:MicClicks:Sync", function(channelId)
+	TriggerClientEvent("TokoVoip:MicClicks:SyncCL", -1, channelId)
+end)
+
 RegisterServerEvent("TokoVoip:removePlayerFromRadio")
 AddEventHandler("TokoVoip:removePlayerFromRadio", function(channelId, playerServerId)
 	if channels[channelId] and channels[channelId].subscribers[playerServerId] then
@@ -110,6 +115,8 @@ AddEventHandler("onResourceStart", function(resource)
 	end
 
 	local vText = nil
+	local wsText = nil
+	local ReadyToUseText = nil
 	local base = [[
    ^5_____________________________________________________________
   ^5| ^8 _____     _      __     __   ___ ____   __     ______      ^5|
@@ -151,8 +158,28 @@ AddEventHandler("onResourceStart", function(resource)
 		end
 	end, "GET")
 
-	Wait(250)
+	while vText == nil do
+		Wait(5)
+	end
+
+	while wsText == nil do
+		Wait(5)
+	end
+
+	if not string.find(wsText, "Unable") then
+		ReadyToUseText = "^5| ^7- ^2TokoVoIP is ready for use!                                ^5|"
+	else
+		ReadyToUseText = "^5| ^7- ^1TokoVoIP is NOT ready for use                             ^5|"
+	end
 
 	print(base)
-	print(info:format(vText, wsText, "^5| ^7- ^2TokoVoIP is ready for use!                                ^5|"))
+	print(info:format(vText, wsText, ReadyToUseText))
 end)
+
+-- Functions
+function getPlayersInRadioChannel(channel)
+	return channels[channel].subscribers
+end
+
+-- Exports
+exports("getPlayersInRadioChannel", getPlayersInRadioChannel)
