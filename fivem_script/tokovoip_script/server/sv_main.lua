@@ -175,3 +175,11 @@ AddEventHandler("onResourceStart", function(resource)
 	print(base)
 	print(info:format(vText, wsText, ReadyToUseText))
 end)
+
+-- Functions
+function getPlayersInRadioChannel(channel)
+	return channels[channel].subscribers
+end
+
+-- Exports
+exports("getPlayersInRadioChannel", getPlayersInRadioChannel)
