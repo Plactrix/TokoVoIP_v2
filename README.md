@@ -39,8 +39,9 @@ Our To-Do List:<br />
 - [x] ~~Rework the connection pop up screen~~
 - [x] ~~Add routing bucket support~~
 - [x] ~~Add exports for mumble-voip and pma-voice~~
+- [x] ~~Make the blocking screen toggle-able in the config~~
+- [ ] Add an option in the config to be able to move the "[TokoVoip]" text around (Top left, Top right, Bottom left, Bottom right, etc)
 - [ ] Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers)
-- [ ] Make the blocking screen toggle-able in the config (IN PROGRESS)
 - [ ] Completely recode the TS3 Plugin to use more modern modules
 - [ ] Rewrite ws_server with updated dependencies
 
