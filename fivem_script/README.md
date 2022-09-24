@@ -159,5 +159,21 @@ Step 5: Install TeamSpeak3 Plugin
   </tr>
   </table>
 
+## Server Exports
+- ### updateRoutingBucket(route)
 
+  Changes the player's routing bucket
+
+  <table>
+  <tr>
+    <th>Params</th>
+    <th>type</th>
+    <th>Details</th>
+  </tr>
+  <tr>
+    <td>route</td>
+    <td>number</td>
+    <td>Changes the player's routing bucket</td>
+  </tr>
+  </table>
 Note: Exports will always remain the same, although this README.md will be changed and updated often as we further develop TokoVoIP
