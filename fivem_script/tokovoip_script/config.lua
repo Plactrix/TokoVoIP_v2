@@ -43,10 +43,10 @@ Config = {
         },
 
         -- The following is purely TS client settings, to match states
-        local_click_on = true, -- Is local click on sound active
-        local_click_off = true, -- Is local click off sound active
+        local_click_on = false, -- Is local click on sound active
+        local_click_off = false, -- Is local click off sound active
         remote_click_on = false, -- Is remote click on sound active
-        remote_click_off = true, -- Is remote click off sound active
+        remote_click_off = false, -- Is remote click off sound active
         enableStereoAudio = true, -- If set to true, positional audio will be stereo (you can hear people more on the left or the right around you)
         localName = "", -- If set, this name will be used as the user's teamspeak display name
     },
