@@ -46,10 +46,7 @@ Our To-Do List:<br />
 - [ ] Rewrite ws_server with updated dependencies
 
 Our Known-Bugs List:<br />
-• ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.\
-• Not a bug, but I just thought i'd throw it in here, the FiveM script doesn't have a blocking screen, it just has a transparent pop up with the TokoVoIP information. I will be adding an option in the configuration to toggle this.\
-If you find any more bugs, feel free to open an issue on Github, or let us know in our Discord server
-
+• ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.
 
 If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or join our Discord server ([discord.gg/DEQ95eVmQ3](https://discord.gg/DEQ95eVmQ3))
 
