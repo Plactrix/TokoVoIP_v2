@@ -390,7 +390,23 @@ function addPlayerToRadio(channel, radio)
 	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, radio)
 end
 
+function addPlayerToCall(channel, radio)
+	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, false)
+end
+
+function setRadioChannel(channel, radio)
+	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, true)
+end
+
+function setCallChannel(channel, radio)
+	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, false)
+end
+
 function removePlayerFromRadio(channel)
+	TriggerServerEvent("TokoVoip:removePlayerFromRadio", channel, voip.serverId)
+end
+
+function removePlayerFromCall(channel)
 	TriggerServerEvent("TokoVoip:removePlayerFromRadio", channel, voip.serverId)
 end
 
@@ -403,6 +419,10 @@ function isPlayerInChannel(channel)
 end
 
 function setRadioVolume(volume)
+	radioVolume = volume
+end
+
+function setCallVolume(volume)
 	radioVolume = volume
 end
 
@@ -419,5 +439,10 @@ end
 -- Exports
 exports("addPlayerToRadio", addPlayerToRadio)
 exports("removePlayerFromRadio", removePlayerFromRadio)
+exports("removePlayerFromCall", removePlayerFromCall)
 exports("isPlayerInChannel", isPlayerInChannel)
 exports("setRadioVolume", setRadioVolume)
+exports("setCallVolume", setCallVolume)
+exports("setCallChannel", setCallChannel)
+exports("setRadioChannel", setRadioChannel)
+exports("addPlayerToCall", addPlayerToCall)
