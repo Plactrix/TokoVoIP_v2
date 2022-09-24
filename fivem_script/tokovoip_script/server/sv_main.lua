@@ -92,7 +92,7 @@ RegisterServerEvent("TokoVoip:removePlayerFromAllRadio")
 AddEventHandler("TokoVoip:removePlayerFromAllRadio", function(playerServerId)
 	for channelId, channel in pairs(channels) do
 		if channel.subscribers[playerServerId] then
-			removePlayerFromRadio(channelId, playerServerId)
+			TriggerEvent("TokoVoip:removePlayerFromRadio", channelId, playerServerId)
 		end
 	end
 end)
