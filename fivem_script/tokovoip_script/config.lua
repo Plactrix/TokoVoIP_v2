@@ -1,7 +1,7 @@
 Config = {
     refreshRate = 100, -- Rate at which the data is sent to the TSPlugin
     networkRefreshRate = 2000, -- Rate at which the network data is updated/reset on the local ped
-    playerListRefreshRate = 2000, -- Rate at which the playerList is updated
+    playerListRefreshRate = 5000, -- Rate at which the playerList is updated
     minVersion = "1.0.0", -- Version of the TS plugin required to play on the server
     enableDebug = false, -- Enable or disable tokovoip debug (Shift+9)
 
