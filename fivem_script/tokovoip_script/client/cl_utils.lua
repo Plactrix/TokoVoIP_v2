@@ -1,4 +1,4 @@
--- Player Data
+-- Functions
 local playersData = {}
 function setPlayerData(playerServerId, key, data, shared)
 	if not key or data == nil then
@@ -11,256 +11,6 @@ function setPlayerData(playerServerId, key, data, shared)
 	if shared then
 		TriggerServerEvent("Tokovoip:setPlayerData", playerServerId, key, data, shared)
 	end
-end
-
-
--- Define Things
-TokoVoip = {};
-TokoVoip.__index = TokoVoip;
-local lastTalkState = false
-Keys = {
-	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
-	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
-	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
-	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
-	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
-	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
-	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
-	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
-	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
-}
-
-RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', Config.radioKey)
-RegisterKeyMapping('+cycleProximity', 'Changes proximity range for TokoVoIP', 'keyboard', Config.keyProximity)
-
--- Events
-RegisterNetEvent("Tokovoip:setPlayerData")
-AddEventHandler("Tokovoip:setPlayerData", setPlayerData)
-
-RegisterNetEvent("Tokovoip:doRefreshAllPlayerData")
-AddEventHandler("Tokovoip:doRefreshAllPlayerData", doRefreshAllPlayerData)
-
-RegisterNetEvent("onClientPlayerReady")
-AddEventHandler("onClientPlayerReady", refreshAllPlayerData)
-
--- Add Event Handlers
-AddEventHandler("onClientResourceStart", function(resource)
-	if resource == GetCurrentResourceName() then	--	Initialize the script when this resource is started
-		CreateThread(function()
-			if Config.plugin_data.localName == '' then
-				Config.plugin_data.localName = escape(GetPlayerName(PlayerId())) -- Set the local name
-			end
-			if Config.plugin_data.localNamePrefix == nil then
-				Config.plugin_data.localNamePrefix = "[" .. GetPlayerServerId(PlayerId()) .. "] "
-			end
-		end)
-		TriggerEvent("initializeVoip")
-	end
-end)
-
--- Functions
-function TokoVoip.init(self, config)
-	local self = setmetatable(config, TokoVoip)
-	self.config = json.decode(json.encode(config))
-	self.lastNetworkUpdate = 0
-	self.lastPlayerListUpdate = self.playerListRefreshRate
-	self.playerList = {}
-	return self
-end
-
-function TokoVoip.loop(self)
-	CreateThread(function()
-		while true do
-			Wait(self.refreshRate)
-			self:processFunction()
-			self:sendDataToTS3()
-
-			self.lastNetworkUpdate = self.lastNetworkUpdate + self.refreshRate
-			self.lastPlayerListUpdate = self.lastPlayerListUpdate + self.refreshRate
-			if self.lastNetworkUpdate >= self.networkRefreshRate then
-				self.lastNetworkUpdate = 0
-				self:updateTokoVoipInfo()
-			end
-			if self.lastPlayerListUpdate >= self.playerListRefreshRate then
-				self.playerList = GetActivePlayers()
-				self.lastPlayerListUpdate = 0
-			end
-		end
-	end)
-end
-
-function TokoVoip.sendDataToTS3(self)
-	if self.pluginStatus == -1 then
-		return
-	end
-	self:updatePlugin("updateTokoVoip", self.plugin_data)
-end
-
-function TokoVoip.updateTokoVoipInfo(self, forceUpdate)
-	local info = ""
-    if self.mode == 1 then
-		info = "Whispering"
-	elseif self.mode == 2 then
-		info = "Normal"
-    elseif self.mode == 3 then
-		info = "Shouting"
-	end
-
-	if self.plugin_data.radioTalking then
-		info = info .. " on radio "
-	end
-	if self.talking == 1 or self.plugin_data.radioTalking then
-		info = "<font class='talking'>" .. info .. "</font>"
-	end
-	if self.plugin_data.radioChannel ~= -1 and self.myChannels[self.plugin_data.radioChannel] then
-		if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") then
-			info = info  .. "<br> [Phone] " .. self.myChannels[self.plugin_data.radioChannel].name
-		else
-			info = info  .. "<br> [Radio] " .. self.myChannels[self.plugin_data.radioChannel].name
-		end
-	end
-	if info == self.screenInfo and not forceUpdate then
-		return
-	end
-	self.screenInfo = info
-	self:updatePlugin("updateTokovoipInfo", info)
-end
-
-function TokoVoip.updatePlugin(self, event, payload)
-	SendNUIMessage({
-		type = event,
-		payload = payload
-	})
-end
-
-function TokoVoip.updateConfig(self)
-	local data = self.config
-	data.plugin_data = self.plugin_data
-	data.pluginVersion = self.pluginVersion
-	data.pluginStatus = self.pluginStatus
-	data.pluginUUID = self.pluginUUID
-	self:updatePlugin("updateConfig", data)
-end
-
-function TokoVoip.disconnect(self)
-	self:updatePlugin("disconnect")
-end
-
-function TokoVoip.initialize(self)
-	self:updateConfig()
-	self:updatePlugin("initializeSocket", self.wsServer)
-
-    RegisterNetEvent("TokoVoip:MicClicks:SyncCL")
-    AddEventHandler("TokoVoip:MicClicks:SyncCL", function(channelId)
-        if self.plugin_data.radioChannel == channelId then
-            SendNUIMessage({
-                transactionType = "playSound",
-                transactionFile  = "mic_click_off",
-                transactionVolume = 0.2
-            })
-        end
-    end)
-
-	RegisterCommand("+RadioTalk", function()
-        if self.plugin_data.radioChannel ~= -1 and self.plugin_data.radioChannel ~= 0 then
-            self.plugin_data.radioTalking = true
-            self.plugin_data.localRadioClicks = false
-			if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") ~= "Call" then
-				SendNUIMessage({
-					transactionType = "playSound",
-					transactionFile  = "mic_click_on",
-					transactionVolume = 0.2
-				})
-                wastalkingonradio = true
-			end
-                if not getPlayerData(self.serverId, "radio:talking") then
-                    setPlayerData(self.serverId, "radio:talking", true, true)
-                end
-                self:updateTokoVoipInfo()
-                if lastTalkState == false and self.myChannels[self.plugin_data.radioChannel] and self.config.radioAnim then
-                    if not string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") and not IsPedSittingInAnyVehicle(PlayerPedId()) then
-                        RequestAnimDict("random@arrests")
-                        while not HasAnimDictLoaded("random@arrests") do
-                            Wait(5)
-                        end
-                        TaskPlayAnim(PlayerPedId(),"random@arrests","generic_radio_chatter", 8.0, 0.0, -1, 49, 0, 0, 0, 0)
-                    end
-                lastTalkState = true
-            end
-        else
-            self.plugin_data.radioTalking = false
-            if getPlayerData(self.serverId, "radio:talking") then
-                setPlayerData(self.serverId, "radio:talking", false, true)
-            end
-            self:updateTokoVoipInfo()
-
-            if lastTalkState == true and self.config.radioAnim then
-                lastTalkState = false
-                StopAnimTask(PlayerPedId(), "random@arrests","generic_radio_chatter", -4.0)
-            end
-        end
-    end)
-
-    RegisterCommand("-RadioTalk", function()
-        self.plugin_data.radioTalking = false
-		if wastalkingonradio then
-			TriggerServerEvent("TokoVoip:MicClicks:Sync", self.plugin_data.radioChannel)
-			wastalkingonradio = false
-		end
-        if getPlayerData(self.serverId, "radio:talking") then
-            setPlayerData(self.serverId, "radio:talking", false, true)
-        end
-        self:updateTokoVoipInfo()
-
-        if lastTalkState == true and self.config.radioAnim then
-            lastTalkState = false
-            StopAnimTask(PlayerPedId(), "random@arrests","generic_radio_chatter", -4.0)
-        end
-    end)
-
-	RegisterCommand("-cycleProximity", function()
-	end)
-
-	RegisterCommand("+cycleProximity", function()
-		if not self.mode then
-			self.mode = 1
-		end
-		self.mode = self.mode + 1
-		if self.mode > 3 then
-			self.mode = 1
-		end
-		setPlayerData(self.serverId, "voip:mode", self.mode, true)
-		self:updateTokoVoipInfo()
-	end)
- 
-	CreateThread(function()
-		while true do
-			Wait(5)
-			if ((self.keySwitchChannelsSecondary and IsControlPressed(0, self.keySwitchChannelsSecondary)) or not self.keySwitchChannelsSecondary) then
-				if IsControlJustPressed(0, self.keySwitchChannels) and tablelength(self.myChannels) > 0 then
-					local myChannels = {}
-					local currentChannel = 0
-					local currentChannelID = 0
-
-					for channel, _ in pairs(self.myChannels) do
-						if channel == self.plugin_data.radioChannel then
-							currentChannel = #myChannels + 1
-							currentChannelID = channel
-						end
-						myChannels[#myChannels + 1] = {channelID = channel}
-					end
-					if currentChannel == #myChannels then
-						currentChannelID = myChannels[1].channelID
-					else
-						currentChannelID = myChannels[currentChannel + 1].channelID
-					end
-					self.plugin_data.radioChannel = currentChannelID
-					setPlayerData(self.serverId, "radio:channel", currentChannelID, true)
-					self:updateTokoVoipInfo()
-				end
-			end
-		end
-	end)
 end
 
 function getPlayerData(playerServerId, key)
@@ -404,6 +154,257 @@ function SetTokoProperty(key, value)
 			end
 		end
 	end
+end
+
+-- Define Things
+TokoVoip = {};
+TokoVoip.__index = TokoVoip;
+local lastTalkState = false
+Keys = {
+	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
+	["~"] = 243, ["1"] = 157, ["2"] = 158, ["3"] = 160, ["4"] = 164, ["5"] = 165, ["6"] = 159, ["7"] = 161, ["8"] = 162, ["9"] = 163, ["-"] = 84, ["="] = 83, ["BACKSPACE"] = 177, 
+	["TAB"] = 37, ["Q"] = 44, ["W"] = 32, ["E"] = 38, ["R"] = 45, ["T"] = 245, ["Y"] = 246, ["U"] = 303, ["P"] = 199, ["["] = 39, ["]"] = 40, ["ENTER"] = 18,
+	["CAPS"] = 137, ["A"] = 34, ["S"] = 8, ["D"] = 9, ["F"] = 23, ["G"] = 47, ["H"] = 74, ["K"] = 311, ["L"] = 182,
+	["LEFTSHIFT"] = 21, ["Z"] = 20, ["X"] = 73, ["C"] = 26, ["V"] = 0, ["B"] = 29, ["N"] = 249, ["M"] = 244, [","] = 82, ["."] = 81,
+	["LEFTCTRL"] = 36, ["LEFTALT"] = 19, ["SPACE"] = 22, ["RIGHTCTRL"] = 70, 
+	["HOME"] = 213, ["PAGEUP"] = 10, ["PAGEDOWN"] = 11, ["DELETE"] = 178,
+	["LEFT"] = 174, ["RIGHT"] = 175, ["TOP"] = 27, ["DOWN"] = 173,
+	["NENTER"] = 201, ["N4"] = 108, ["N5"] = 60, ["N6"] = 107, ["N+"] = 96, ["N-"] = 97, ["N7"] = 117, ["N8"] = 61, ["N9"] = 118
+}
+
+RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', Config.radioKey)
+RegisterKeyMapping('+cycleProximity', 'Changes proximity range for TokoVoIP', 'keyboard', Config.keyProximity)
+
+-- Events
+RegisterNetEvent("Tokovoip:setPlayerData")
+AddEventHandler("Tokovoip:setPlayerData", setPlayerData)
+
+RegisterNetEvent("Tokovoip:doRefreshAllPlayerData")
+AddEventHandler("Tokovoip:doRefreshAllPlayerData", doRefreshAllPlayerData)
+
+RegisterNetEvent("onClientPlayerReady")
+AddEventHandler("onClientPlayerReady", refreshAllPlayerData)
+
+-- Add Event Handlers
+AddEventHandler("onClientResourceStart", function(resource)
+	if resource == GetCurrentResourceName() then	--	Initialize the script when this resource is started
+		CreateThread(function()
+			if Config.plugin_data.localName == '' then
+				Config.plugin_data.localName = escape(GetPlayerName(PlayerId())) -- Set the local name
+			end
+			if Config.plugin_data.localNamePrefix == nil then
+				Config.plugin_data.localNamePrefix = "[" .. GetPlayerServerId(PlayerId()) .. "] "
+			end
+		end)
+		TriggerEvent("initializeVoip")
+	end
+end)
+
+-- TokoVoIP Functions
+function TokoVoip.init(self, config)
+	local self = setmetatable(config, TokoVoip)
+	self.config = json.decode(json.encode(config))
+	self.lastNetworkUpdate = 0
+	self.lastPlayerListUpdate = self.playerListRefreshRate
+	self.playerList = {}
+	return self
+end
+
+function TokoVoip.loop(self)
+	CreateThread(function()
+		while true do
+			Wait(self.refreshRate)
+			self:processFunction()
+			self:sendDataToTS3()
+
+			self.lastNetworkUpdate = self.lastNetworkUpdate + self.refreshRate
+			self.lastPlayerListUpdate = self.lastPlayerListUpdate + self.refreshRate
+			if self.lastNetworkUpdate >= self.networkRefreshRate then
+				self.lastNetworkUpdate = 0
+				self:updateTokoVoipInfo()
+			end
+			if self.lastPlayerListUpdate >= self.playerListRefreshRate then
+				self.playerList = GetActivePlayers()
+				self.lastPlayerListUpdate = 0
+			end
+		end
+	end)
+end
+
+function TokoVoip.sendDataToTS3(self)
+	if self.pluginStatus == -1 then
+		return
+	end
+	self:updatePlugin("updateTokoVoip", self.plugin_data)
+end
+
+function TokoVoip.updateTokoVoipInfo(self, forceUpdate)
+	local info = ""
+    if self.mode == 1 then
+		info = "Whispering"
+	elseif self.mode == 2 then
+		info = "Normal"
+    elseif self.mode == 3 then
+		info = "Shouting"
+    elseif self.mode == 4 then
+		info = "Threatre"
+	end
+
+	if self.plugin_data.radioTalking then
+		info = info .. " on radio "
+	end
+	if self.talking == 1 or self.plugin_data.radioTalking then
+		info = "<font class='talking'>" .. info .. "</font>"
+	end
+	if self.plugin_data.radioChannel ~= -1 and self.myChannels[self.plugin_data.radioChannel] then
+		if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") then
+			info = info  .. "<br> [Phone] " .. self.myChannels[self.plugin_data.radioChannel].name
+		else
+			info = info  .. "<br> [Radio] " .. self.myChannels[self.plugin_data.radioChannel].name
+		end
+	end
+	if info == self.screenInfo and not forceUpdate then
+		return
+	end
+	self.screenInfo = info
+	self:updatePlugin("updateTokovoipInfo", info)
+end
+
+function TokoVoip.updatePlugin(self, event, payload)
+	SendNUIMessage({
+		type = event,
+		payload = payload
+	})
+end
+
+function TokoVoip.updateConfig(self)
+	local data = self.config
+	data.plugin_data = self.plugin_data
+	data.pluginVersion = self.pluginVersion
+	data.pluginStatus = self.pluginStatus
+	data.pluginUUID = self.pluginUUID
+	self:updatePlugin("updateConfig", data)
+end
+
+function TokoVoip.disconnect(self)
+	self:updatePlugin("disconnect")
+end
+
+function TokoVoip.initialize(self)
+	self:updateConfig()
+	self:updatePlugin("initializeSocket", self.wsServer)
+
+    RegisterNetEvent("TokoVoip:MicClicks:SyncCL")
+    AddEventHandler("TokoVoip:MicClicks:SyncCL", function(channelId)
+        if self.plugin_data.radioChannel == channelId then
+            SendNUIMessage({
+                transactionType = "playSound",
+                transactionFile  = "mic_click_off",
+                transactionVolume = 0.2
+            })
+        end
+    end)
+
+	RegisterCommand("+RadioTalk", function()
+        if self.plugin_data.radioChannel ~= -1 and self.plugin_data.radioChannel ~= 0 then
+            self.plugin_data.radioTalking = true
+            self.plugin_data.localRadioClicks = false
+			if string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") ~= "Call" then
+				SendNUIMessage({
+					transactionType = "playSound",
+					transactionFile  = "mic_click_on",
+					transactionVolume = 0.2
+				})
+                wastalkingonradio = true
+			end
+                if not getPlayerData(self.serverId, "radio:talking") then
+                    setPlayerData(self.serverId, "radio:talking", true, true)
+                end
+                self:updateTokoVoipInfo()
+                if lastTalkState == false and self.myChannels[self.plugin_data.radioChannel] and self.config.radioAnim then
+                    if not string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") and not IsPedSittingInAnyVehicle(PlayerPedId()) then
+                        RequestAnimDict("random@arrests")
+                        while not HasAnimDictLoaded("random@arrests") do
+                            Wait(5)
+                        end
+                        TaskPlayAnim(PlayerPedId(),"random@arrests","generic_radio_chatter", 8.0, 0.0, -1, 49, 0, 0, 0, 0)
+                    end
+                lastTalkState = true
+            end
+        else
+            self.plugin_data.radioTalking = false
+            if getPlayerData(self.serverId, "radio:talking") then
+                setPlayerData(self.serverId, "radio:talking", false, true)
+            end
+            self:updateTokoVoipInfo()
+
+            if lastTalkState == true and self.config.radioAnim then
+                lastTalkState = false
+                StopAnimTask(PlayerPedId(), "random@arrests","generic_radio_chatter", -4.0)
+            end
+        end
+    end)
+
+    RegisterCommand("-RadioTalk", function()
+        self.plugin_data.radioTalking = false
+		if wastalkingonradio then
+			TriggerServerEvent("TokoVoip:MicClicks:Sync", self.plugin_data.radioChannel)
+			wastalkingonradio = false
+		end
+        if getPlayerData(self.serverId, "radio:talking") then
+            setPlayerData(self.serverId, "radio:talking", false, true)
+        end
+        self:updateTokoVoipInfo()
+
+        if lastTalkState == true and self.config.radioAnim then
+            lastTalkState = false
+            StopAnimTask(PlayerPedId(), "random@arrests","generic_radio_chatter", -4.0)
+        end
+    end)
+
+	RegisterCommand("-cycleProximity", function()
+	end)
+
+	RegisterCommand("+cycleProximity", function()
+		if not self.mode then
+			self.mode = 1
+		end
+		self.mode = self.mode + 1
+		if self.mode > 4 then
+			self.mode = 1
+		end
+		setPlayerData(self.serverId, "voip:mode", self.mode, true)
+		self:updateTokoVoipInfo()
+	end)
+ 
+	CreateThread(function()
+		while true do
+			Wait(5)
+			if ((self.keySwitchChannelsSecondary and IsControlPressed(0, self.keySwitchChannelsSecondary)) or not self.keySwitchChannelsSecondary) then
+				if IsControlJustPressed(0, self.keySwitchChannels) and tablelength(self.myChannels) > 0 then
+					local myChannels = {}
+					local currentChannel = 0
+					local currentChannelID = 0
+
+					for channel, _ in pairs(self.myChannels) do
+						if channel == self.plugin_data.radioChannel then
+							currentChannel = #myChannels + 1
+							currentChannelID = channel
+						end
+						myChannels[#myChannels + 1] = {channelID = channel}
+					end
+					if currentChannel == #myChannels then
+						currentChannelID = myChannels[1].channelID
+					else
+						currentChannelID = myChannels[currentChannel + 1].channelID
+					end
+					self.plugin_data.radioChannel = currentChannelID
+					setPlayerData(self.serverId, "radio:channel", currentChannelID, true)
+					self:updateTokoVoipInfo()
+				end
+			end
+		end
+	end)
 end
 
 -- Exports

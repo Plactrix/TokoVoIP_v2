@@ -103,6 +103,11 @@ AddEventHandler("TokoVoip:getServerId", function()
 end)
 
 -- Add Event Handlers
+AddEventHandler("playerJoined", function()
+	local src = source
+	updateRoutingBucket(src, 0)
+end)
+
 AddEventHandler("playerDropped", function()
 	TriggerEvent("TokoVoip:removePlayerFromAllRadio", source)
 	playersData[source] = nil
@@ -112,6 +117,10 @@ end)
 AddEventHandler("onResourceStart", function(resource)
 	if resource ~= GetCurrentResourceName() then
 		return
+	end
+
+	for index, player in pairs(GetPlayers()) do
+		updateRoutingBucket(player, 0)
 	end
 
 	local vText = nil
