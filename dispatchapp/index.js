@@ -41,8 +41,7 @@ function startup(sentEndpoint) {
         if (data.includes('ping')) {
             setInterval(() => {
                 ws.send(`42${JSON.stringify(['pong', ''])}`)
-                ws.send(`42["data",{"remote_click_on":false,"TSChannelWait":"[Server 1] Waiting Room","posX":0,"radioChannel":0,"localNamePrefix":"[16] ","TSChannel":"[Server 1] In-Game","local_click_off":false,"radioTalking":false,"TSPassword":"EwxFkp4NPHA22nN6","posZ":73.47534942626953,"posY":0,"TSChannelSupport":"NO SUPPORT WILL BE GIVEN HERE","enableStereoAudio":true,"remote_click_off":false,"localRadioClicks":false,"TSDownload":"https://api.plactrix.net/tokovoip","localName":"Plactrix","TSChannelWhitelist":["NO SUPPORT WILL BE GIVEN HERE"],"TSServer":"ts.saurp.com","Users":[],"local_click_on":false}]`)
-            }, 1000)
+						}, 1000)
         }
     })
 
