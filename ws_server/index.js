@@ -162,6 +162,18 @@ io.on('connection', async socket => {
     });
     await registerHandshake(socket);
     socket.on('data', data => onIncomingData(socket, data));
+  } else if (socket.from === 'dispatchclient') {
+    socketHeartbeat(socket);
+    socket.on('updateClientIP', data => {
+      if (!data || !data.ip || !IPv4Regex.test(data.ip) || !clients[socket.uuid]) return;
+				if (lodash.get(clients, `[${socket.uuid}].fivem.socket`)) {
+					delete handshakes[clients[socket.uuid].fivem.socket.clientIp];
+					clients[socket.uuid].fivem.socket.clientIp = data.ip;
+				}
+      if (lodash.get(clients, `[${socket.uuid}].ts3.socket`)) clients[socket.uuid].ts3.socket.clientIp = data.ip;
+    });
+    await registerHandshake(socket);
+    socket.on('data', data => onIncomingData(socket, data));
   }
 });
 
@@ -221,14 +233,23 @@ async function onSocketDisconnect(socket) {
   if (socket.from === 'fivem') {
     if (handshakes[socket.clientIp]) delete handshakes[socket.clientIp];
   }
+  if (socket.from === 'dispatchclient') {
+    if (handshakes[socket.clientIp]) delete handshakes[socket.clientIp];
+  }
   if (socket.uuid && clients[socket.uuid]) {
     const client = clients[socket.uuid];
     delete clients[socket.uuid];
     const secondary = (socket.from === 'fivem') ? 'ts3' : 'fivem';
+    const third = (socket.from === 'dispatchclient') ? 'ts3' : 'fivem';
     if (client[secondary].socket) {
       client[secondary].socket.emit('disconnectMessage', `${socket.from}Disconnected`);
       if (secondary === 'ts3') sleep(100) && client[secondary].socket.disconnect(true);
       else registerHandshake(client[secondary].socket);
+    }
+    if (client[third].socket) {
+      client[third].socket.emit('disconnectMessage', `${socket.from}Disconnected`);
+      if (third === 'ts3') sleep(100) && client[third].socket.disconnect(true);
+      else registerHandshake(client[third].socket);
     }
   }
 }
@@ -242,6 +263,13 @@ function socketHeartbeat(socket) {
     if (!socket.uuid || !clients[socket.uuid]) return;
     clients[socket.uuid].latency = lodash.get(clients[socket.uuid], 'fivem.socket.latency', 0) + lodash.get(clients[socket.uuid], 'ts3.socket.latency', 0);
     if (socket.from === 'fivem') {
+      socket.emit('onLatency', {
+        total: clients[socket.uuid].latency,
+        fivem: lodash.get(clients[socket.uuid], 'fivem.socket.latency', 0),
+        ts3: lodash.get(clients[socket.uuid], 'ts3.socket.latency', 0),
+      });
+    }
+    if (socket.from === 'dispatchclient') {
       socket.emit('onLatency', {
         total: clients[socket.uuid].latency,
         fivem: lodash.get(clients[socket.uuid], 'fivem.socket.latency', 0),
