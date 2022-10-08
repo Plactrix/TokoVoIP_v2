@@ -32,12 +32,12 @@ Here are some of the TokoVoIP V2 features:<br />
 
 Our To-Do List:<br />
 - [ ] Add an option in the config to be able to move the "[TokoVoip]" text around (Top left, Top right, Bottom left, Bottom right, etc)
-- [ ] Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers)
+- [ ] Create an external program so you can connect to toko's radio frequencies (Useful for things such as dispatchers) | In Progress
 - [ ] Completely recode the TS3 Plugin to use more modern modules
 - [ ] Rewrite ws_server with updated dependencies
 
 Our Known-Bugs List:<br />
-• ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.
+• ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization. If you have any issues with this, ping Plactrix in the support Discord and i'll help you out
 
 If you require any assistance with installation, bugs, or anything at all, feel free to create an issue on github or join our Discord server ([discord.gg/DEQ95eVmQ3](https://discord.gg/DEQ95eVmQ3))
 
