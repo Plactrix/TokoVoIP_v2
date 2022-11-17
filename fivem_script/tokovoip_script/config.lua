@@ -52,10 +52,10 @@ Config = {
     },
 
     channels = {
-        {name = "Police RTO", subscribers = {}},
-        {name = "Fire/EMS RTO", subscribers = {}},
-        {name = "Shared Tac 1", subscribers = {}},
-        {name = "Shared Tac 2", subscribers = {}},
-        {name = "Shared Tac 3", subscribers = {}}
+        { name = "Police RTO", subscribers = {} },
+        { name = "Fire/EMS RTO", subscribers = {} },
+        { name = "Shared Tac 1", subscribers = {} },
+        { name = "Shared Tac 2", subscribers = {} },
+        { name = "Shared Tac 3", subscribers = {} }
     }
 }
