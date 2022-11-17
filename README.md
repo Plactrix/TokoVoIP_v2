@@ -40,6 +40,8 @@ Our To-Do List:<br />
 - [ ] Allow radio channels to have x.xx channels instead of whole number channels
 - [ ] Recode NUI in react (because why not lol)
 - [ ] Add voice echo effects if your in a big room for example
+- [ ] Remove all vulnerable events
+- [ ] Rework all README's and add an in-depth document page for installation and FAQ
 
 Our Known-Bugs List:<br />
 • ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.
@@ -51,7 +53,7 @@ If you like TokoVoIP, feel free to leave the original creator a donation ([Itoko
 [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=H2UXEZBF5KQBL&source=url)  
 
 # TokoVoIP Installation
-Firstly, you will need to head over to the [Releases](https://github.com/Plactrix/TokoVoIP_v2/releases) page and download ws-server, tokovoip_script and tokovoip-x.x.x.ts3_plugin
+Firstly, you will need to head over to the [Releases](https://github.com/Plactrix/TokoVoIP_v2/releases) page and download ws-server, tokovoip_script and the matching tokovoip-x.x.x.ts3_plugin file.
 
 ## Setting up the TeamSpeak3 plugin
 Every player must install Teamspeak 3 and the TokoVoIP plugin for the script to work correctly
@@ -135,7 +137,7 @@ Once the fivem websocket & ts3 websocket successfully handshaked, the master ser
 ## Building the TS3 plugin
 
 You will need the following installed:
-- [Visual Studio v15 2017](https://visualstudio.microsoft.com/vs/)
+- [Visual Studio (Any version *should* work, I use v15 2017)](https://visualstudio.microsoft.com/vs/)
 - [Qt 5.12.7](https://download.qt.io/archive/qt/5.12/5.12.7/)
 - [CMake](https://cmake.org/)
 
@@ -193,7 +195,6 @@ For the rest, refer to the [license](https://github.com/Itokoyamato/TokoVOIP_TS3
 # Dependencies, sources and credits
 
 - [Original TokoVoIP Developer](Itokoyamatohttps://github.com/Itokoyamato/TokoVOIP_TS3) ([Itokoyamato](https://github.com/Itokoyamato/TokoVOIP_TS3))
-- Master Server by [Neon](https://github.com/DeveloperNeon)
 - [RadioFX](https://github.com/thorwe/teamspeak-plugin-radiofx) by Thorwe
 - [Simple-WebSocket-Server](https://gitlab.com/eidheim/Simple-WebSocket-Server) by eidheim
 - [JSON for Modern C++](https://github.com/nlohmann/json.git) by nlohmann
