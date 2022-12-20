@@ -192,3 +192,12 @@ end
 
 -- Exports
 exports("getPlayersInRadioChannel", getPlayersInRadioChannel)
+if Config.dispatchapp.enable then
+    exports("getServerId", function()
+        return getServerId
+    end)
+
+    exports("getTokoConfig", function()
+        return Config
+    end)
+end

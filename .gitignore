@@ -51,3 +51,7 @@ Temporary Items
 
 # VSCode
 .vscode
+
+# NodeJS
+node_modules
+package-lock.json

@@ -31,5 +31,6 @@ client_scripts {
 
 server_scripts {
     "server/sv_utils.lua",
-    "server/sv_main.lua"
+    "server/sv_main.lua",
+    "server/dispatchapp.js"
 }

@@ -5,6 +5,11 @@ Config = {
     minVersion = "1.0.0", -- Version of the TS plugin required to play on the server
     enableDebug = false, -- Enable or disable tokovoip debug (Shift+9)
 
+    dispatchapp = {
+		enable = false,
+        port = 1234
+	},
+
     distance = {
         2, -- Whisper speech distance in gta distance units
         5, -- Normal speech distance in gta distance units
