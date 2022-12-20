@@ -48,3 +48,6 @@ Temporary Items
 
 *.VC.opendb
 *.VC.db
+
+# VSCode
+.vscode
