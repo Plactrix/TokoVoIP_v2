@@ -834,7 +834,7 @@ void setClientTalking(bool status)
 		outputLog("Error retrieving vad setting");
 		return;
 	}
-	if (strcmp(vad, "true") == 0 && !isPTT) return;
+	if (strcmp(vad, "true") == 0) return;
 
 	if (status) {
 		if ((error = ts3Functions.setClientSelfVariableAsInt(serverId, CLIENT_INPUT_DEACTIVATED, 0)) != ERROR_ok)
