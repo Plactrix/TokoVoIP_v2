@@ -222,8 +222,8 @@ CreateThread(function()
 	voip.fivemServerId = response
 	Citizen.Trace("TokoVoIP: FiveM Server ID is " .. voip.fivemServerId .. "\n")
 	voip.processFunction = clientProcessing -- Link the processing function that will be looped
+	voip:initialize() -- Initialize the websocket and controls
 	while not nuiLoaded do
-		voip:initialize() -- Initialize the websocket and controls
 		Wait(5000)
 	end
 	voip:loop()
