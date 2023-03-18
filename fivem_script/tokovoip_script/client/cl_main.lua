@@ -426,6 +426,10 @@ function setCallVolume(volume)
 	radioVolume = volume
 end
 
+function getPlayerChannels()
+	return voip.myChannels
+end
+
 function displayPluginScreen(toggle)
 	if displayingPluginScreen ~= toggle then
 		SendNUIMessage({
@@ -441,6 +445,7 @@ exports("addPlayerToRadio", addPlayerToRadio)
 exports("removePlayerFromRadio", removePlayerFromRadio)
 exports("removePlayerFromCall", removePlayerFromCall)
 exports("isPlayerInChannel", isPlayerInChannel)
+exports("getPlayerChannels", getPlayerChannels);
 exports("setRadioVolume", setRadioVolume)
 exports("setCallVolume", setCallVolume)
 exports("setCallChannel", setCallChannel)

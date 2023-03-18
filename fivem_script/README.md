@@ -1,5 +1,5 @@
-
 # Installation
+
 Step 1: Download the latest version of tokovoip-script.zip from the releases section\
 Step 2: Upload it to your server's resources folder\
 Step 3: Configure all options in config.lua to fit your servers needs (Note: When configuring channel names, if it contains "Call", it will be displayed as a phone call on the voice overlay)\
@@ -9,6 +9,7 @@ Step 5: Install TeamSpeak3 Plugin
 ## API Reference
 
 ## Client exports
+
 - ### addPlayerToRadio(channel)
 
   Adds the player to a radio channel
@@ -30,7 +31,7 @@ Step 5: Install TeamSpeak3 Plugin
     <td>If set to true, channel will be handled as a radio, false will handle the channel as a phone call</td>
   </tr>
   </table>
-	
+
 - ### addPlayerToCall(channel)
 
   Adds the player to a phone call
@@ -63,7 +64,7 @@ Step 5: Install TeamSpeak3 Plugin
     <td>Id of the radio channel</td>
   </tr>
   </table>
-	
+
 - ### removePlayerFromCall(channel)
 
   Removes the player from a phone call
@@ -80,6 +81,10 @@ Step 5: Install TeamSpeak3 Plugin
     <td>ID of the call channel</td>
   </tr>
   </table>
+
+- ### getPlayerChannels()
+
+  Returns a list of the players currently connected radio channels
 
 - ### isPlayerInChannel(channel)
 
@@ -191,7 +196,7 @@ Step 5: Install TeamSpeak3 Plugin
     <td>Changes the radio volume</td>
   </tr>
   </table>
-	
+
 - ### setCallVolume(volume)
 
   Changes the volume of voices over radio
@@ -208,7 +213,7 @@ Step 5: Install TeamSpeak3 Plugin
     <td>Changes the radio volume</td>
   </tr>
   </table>
-	
+
 - ### setRadioChannel(channel)
 
   Changes the volume of voices over radio
@@ -225,7 +230,7 @@ Step 5: Install TeamSpeak3 Plugin
     <td>Sets your Radio Channel</td>
   </tr>
   </table>
-	
+
 - ### setCallChannel(channel)
 
   Changes the volume of voices over radio
@@ -244,6 +249,7 @@ Step 5: Install TeamSpeak3 Plugin
   </table>
 
 ## Server Exports
+
 - ### updateRoutingBucket(route)
 
   Changes the player's routing bucket
@@ -265,16 +271,16 @@ Step 5: Install TeamSpeak3 Plugin
 
   Get a table of players that are on a radio channel
 
-  <table>
-  <tr>
-    <th>Params</th>
-    <th>type</th>
-    <th>Details</th>
-  </tr>
-  <tr>
-    <td>channel</td>
-    <td>number</td>
-    <td>Returns a table of the players who are connected to the channel</td>
-  </tr>
-  </table>
-Note: Exports will always remain the same, although this README.md will be changed and updated often as we further develop TokoVoIP
+    <table>
+    <tr>
+      <th>Params</th>
+      <th>type</th>
+      <th>Details</th>
+    </tr>
+    <tr>
+      <td>channel</td>
+      <td>number</td>
+      <td>Returns a table of the players who are connected to the channel</td>
+    </tr>
+    </table>
+  Note: Exports will always remain the same, although this README.md will be changed and updated often as we further develop TokoVoIP
