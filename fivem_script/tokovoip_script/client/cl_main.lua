@@ -296,8 +296,14 @@ function clientProcessing()
 		do
 			local playerPos = GetPedBoneCoords(playerPed, HeadBone)
 			local dist = #(localPos - playerPos)
-			if dist > voip.distance[3] and playerRoutingBucket == routingBucket then
-				goto continue
+			if Config.distance[4] then
+				if dist > voip.distance[4] then
+					goto continue
+				end
+			else
+				if dist > voip.distance[3] then
+					goto continue
+				end
 			end
 
 			if not getPlayerData(playerServerId, "voip:mode") then
@@ -306,7 +312,11 @@ function clientProcessing()
 
 			--	Process the volume for proximity voip
 			local mode = tonumber(getPlayerData(playerServerId, "voip:mode"))
-			if (not mode or (mode ~= 1 and mode ~= 2 and mode ~= 3)) then mode = 1 end
+			if Config.distance[4] then
+				if (not mode or (mode ~= 1 and mode ~= 2 and mode ~= 3)) then mode = 1 end
+			else
+				if (not mode or (mode ~= 1 and mode ~= 2)) then mode = 1 end
+			end
 			local volume = -30 + (30 - dist / voip.distance[mode] * 30)
 			if volume >= 0 then
 				volume = 0

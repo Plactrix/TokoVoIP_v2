@@ -240,14 +240,24 @@ end
 
 function TokoVoip.updateTokoVoipInfo(self, forceUpdate)
 	local info = ""
-    if self.mode == 1 then
-		info = "Whispering"
-	elseif self.mode == 2 then
-		info = "Normal"
-    elseif self.mode == 3 then
-		info = "Shouting"
-    elseif self.mode == 4 then
-		info = "Threatre"
+	if Config.distance[4] then
+		if self.mode == 1 then
+			info = "Whispering"
+		elseif self.mode == 2 then
+			info = "Normal"
+		elseif self.mode == 3 then
+			info = "Shouting"
+		elseif self.mode == 4 then
+			info = "Theatre"
+		end
+	else
+		if self.mode == 1 then
+			info = "Whispering"
+		elseif self.mode == 2 then
+			info = "Normal"
+		elseif self.mode == 3 then
+			info = "Shouting"
+		end
 	end
 
 	if self.plugin_data.radioTalking then
@@ -370,8 +380,14 @@ function TokoVoip.initialize(self)
 			self.mode = 1
 		end
 		self.mode = self.mode + 1
-		if self.mode > 4 then
-			self.mode = 1
+		if Config.distance[4] then
+			if self.mode > 4 then
+				self.mode = 1
+			end
+		else
+			if self.mode > 3 then
+				self.mode = 1
+			end
 		end
 		setPlayerData(self.serverId, "voip:mode", self.mode, true)
 		self:updateTokoVoipInfo()

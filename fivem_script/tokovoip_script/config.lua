@@ -9,6 +9,7 @@ Config = {
         2, -- Whisper speech distance in gta distance units
         5, -- Normal speech distance in gta distance units
         7, -- Shouting speech distance in gta distance units
+        -- 40, -- Uncomment this line to enable Theatre Mode
     },
     headingType = 0, -- headingType 0 uses GetGameplayCamRot, basing heading on the camera's heading, to match how other GTA sounds work. headingType 1 uses GetEntityHeading which is based on the character's direction
     radioKey = "CAPITAL", -- Keybind used to talk on the radio
