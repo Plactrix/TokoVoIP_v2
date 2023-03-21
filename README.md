@@ -9,6 +9,8 @@
   - [Setting up ws-server as a standalone NodeJS application](#setting-up-ws-server-as-a-standalone-nodejs-application)
   - [Onesync Infinity](#onesync-infinity)
 - [How exactly does TokoVoIP Work?](#how-exactly-does-tokovoip-work)
+- [Framework Integration](#framework-integration)
+  - [QBCore](#how-to-integrate-tokovoip-into-qb-hud)
 - [Building the TS3 plugin](#building-the-ts3-plugin)
 - [Packaging the TS3 plugin](#packaging-the-ts3-plugin)
 - [Itokoyamato's Terms and Conditions](#itokoyamatos-terms-and-conditions)
@@ -133,6 +135,25 @@ Once the fivem websocket & ts3 websocket successfully handshaked, the master ser
 
 **Could not find dependency yarn for resource ws_server**:
 - Install yarn resource from [cfx-server-data repo](https://github.com/citizenfx/cfx-server-data/tree/master/resources/%5Bsystem%5D/%5Bbuilders%5D)
+
+## Framework Integration
+### How to Integrate TokoVoIP Into qb-hud:
+Simply replace the lines in the `client.lua` with the ones provided below:\
+\
+Change This line: `local talking = NetworkIsPlayerTalking(playerId)` (Roughly line 719)\
+With this: `exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0`
+\
+\
+Change This line: `voice = LocalPlayer.state['proximity'].distance` (Roughly line 722)\
+With this: `voice = exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:mode") or 0`
+\
+\
+Change Both of these lines: `LocalPlayer.state['radioChannel']` (Roughy lines 746 and 790)\
+With this: `exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "radio:channel")`
+\
+\
+\
+Alternatively you may use my forked [qb-hud](https://github.com/Plactrix/qb-hud-tokovoip) version, but it may be outdated from the original
 
 ## Building the TS3 plugin
 
