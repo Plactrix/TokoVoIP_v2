@@ -4,7 +4,7 @@ rdr3_warning "I acknowledge that this is a prerelease build of RedM, and I am aw
 
 author "Itokoyamato, Plactrix & Neon"
 description "TokoVoIP V2: A simple FiveM VoIP script that uses TeamSpeak as the voice server"
-version "2.0.1"
+version "2.0.3"
 lua54 "yes"
 
 files {
