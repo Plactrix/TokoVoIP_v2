@@ -9,6 +9,8 @@
   - [Setting up ws-server as a standalone NodeJS application](#setting-up-ws-server-as-a-standalone-nodejs-application)
   - [Onesync Infinity](#onesync-infinity)
 - [How exactly does TokoVoIP Work?](#how-exactly-does-tokovoip-work)
+- [Framework Integration](#framework-integration)
+  - [QBCore](#how-to-integrate-tokovoip-into-qb-hud)
 - [Building the TS3 plugin](#building-the-ts3-plugin)
 - [Packaging the TS3 plugin](#packaging-the-ts3-plugin)
 - [Itokoyamato's Terms and Conditions](#itokoyamatos-terms-and-conditions)
@@ -38,10 +40,10 @@ Our To-Do List:<br />
 - [ ] Add a way for users with an ace permission to mute specific people with a command
 - [ ] Add an export to enable/disable a player from talking (useful for servers who don't allow talking whilst being dead)
 - [ ] Allow radio channels to have x.xx channels instead of whole number channels
-- [ ] Recode NUI in react (because why not lol)
 - [ ] Add voice echo effects if your in a big room for example
 - [ ] Remove all vulnerable events
 - [ ] Rework all README's and add an in-depth document page for installation and FAQ
+- [ ] Add a fix for players on the same IP (e.g if a player joins the server, and they have a sibling, the sibling won't be able to connect to ts due to the IP being the same)
 
 Our Known-Bugs List:<br />
 • ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.
@@ -133,6 +135,25 @@ Once the fivem websocket & ts3 websocket successfully handshaked, the master ser
 
 **Could not find dependency yarn for resource ws_server**:
 - Install yarn resource from [cfx-server-data repo](https://github.com/citizenfx/cfx-server-data/tree/master/resources/%5Bsystem%5D/%5Bbuilders%5D)
+
+## Framework Integration
+### How to Integrate TokoVoIP Into qb-hud:
+Simply replace the lines in the `client.lua` with the ones provided below:\
+\
+Change This line: `local talking = NetworkIsPlayerTalking(playerId)` (Roughly line 719)\
+With this: `local talking = exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0`
+\
+\
+Change This line: `voice = LocalPlayer.state['proximity'].distance` (Roughly line 722)\
+With this: `voice = exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:mode") or 0`
+\
+\
+Change Both of these lines: `LocalPlayer.state['radioChannel']` (Roughy lines 746 and 790)\
+With this: `exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "radio:channel")`
+\
+\
+\
+Alternatively you may use my forked [qb-hud](https://github.com/Plactrix/qb-hud-tokovoip) version, but it may be outdated from the original
 
 ## Building the TS3 plugin
 
