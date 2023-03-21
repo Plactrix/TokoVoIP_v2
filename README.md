@@ -141,7 +141,7 @@ Once the fivem websocket & ts3 websocket successfully handshaked, the master ser
 Simply replace the lines in the `client.lua` with the ones provided below:\
 \
 Change This line: `local talking = NetworkIsPlayerTalking(playerId)` (Roughly line 719)\
-With this: `exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0`
+With this: `local talking = exports["tokovoip_script"]:getPlayerData(GetPlayerServerId(PlayerId()), "voip:talking") or 0`
 \
 \
 Change This line: `voice = LocalPlayer.state['proximity'].distance` (Roughly line 722)\
