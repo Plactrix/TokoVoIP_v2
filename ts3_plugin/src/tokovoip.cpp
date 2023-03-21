@@ -30,9 +30,6 @@ using namespace httplib;
 Tokovoip *tokovoip;
 using WsClient = SimpleWeb::SocketClient<SimpleWeb::WS>;
 
-// Endpoint of your Handshake Server
-string handshakeServer = "https://master.tokovoip.itokoyamato.net";
-
 int isRunning = 0;
 
 HANDLE threadWebSocket = INVALID_HANDLE_VALUE;
@@ -540,7 +537,7 @@ void sendWSMessage(string endpoint, json value) {
 
 void checkUpdate() {
 	json updateJSON;
-	httplib::Client cli(handshakeServer);
+	httplib::Client cli("master.tokovoip.itokoyamato.net");
 	cli.set_follow_location(true);
 	auto res = cli.Get("/version");
 	if (res && (res->status == 200 || res->status == 301)) {
@@ -613,7 +610,7 @@ string verifyTSServer() {
 		return "";
 	}
 
-	httplib::Client cli(handshakeServer);
+	httplib::Client cli("master.tokovoip.itokoyamato.net");
 	string path = "/verify?address=" + string(serverIP);
 	cli.set_follow_location(true);
 	outputLog("Getting " + path);
@@ -628,7 +625,7 @@ json handshake(string clientIP) {
 	uint64 serverId = ts3Functions.getCurrentServerConnectionHandlerID();
 	unsigned int error;
 
-	httplib::Client cli(handshakeServer);
+	httplib::Client cli("master.tokovoip.itokoyamato.net");
 	string path = "/handshake?ip=" + string(clientIP);
 	cli.set_follow_location(true);
 	outputLog("Getting " + path);
