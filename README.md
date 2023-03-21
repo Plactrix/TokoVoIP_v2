@@ -40,10 +40,10 @@ Our To-Do List:<br />
 - [ ] Add a way for users with an ace permission to mute specific people with a command
 - [ ] Add an export to enable/disable a player from talking (useful for servers who don't allow talking whilst being dead)
 - [ ] Allow radio channels to have x.xx channels instead of whole number channels
-- [ ] Recode NUI in react (because why not lol)
 - [ ] Add voice echo effects if your in a big room for example
 - [ ] Remove all vulnerable events
 - [ ] Rework all README's and add an in-depth document page for installation and FAQ
+- [ ] Add a fix for players on the same IP (e.g if a player joins the server, and they have a sibling, the sibling won't be able to connect to ts due to the IP being the same)
 
 Our Known-Bugs List:<br />
 • ws_server has outdated modules and may not install correctly for some users. We will be recoding this completely to solve this and to enhance performance and optimization.
