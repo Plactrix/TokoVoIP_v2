@@ -103,11 +103,6 @@ int handleMessage(shared_ptr<WsClient::Connection> connection, string message_st
 	waitChannel = waitingChannelName;
 
 	bool radioTalking = json_data["radioTalking"];
-	bool radioClicks = json_data["localRadioClicks"];
-	bool local_click_on = json_data["local_click_on"];
-	bool local_click_off = json_data["local_click_off"];
-	bool remote_click_on = json_data["remote_click_on"];
-	bool remote_click_off = json_data["remote_click_off"];
 
 	int clickVolume;
 	if (json_data["ClickVolume"].is_number()) clickVolume = json_data["ClickVolume"];
@@ -226,8 +221,6 @@ int handleMessage(shared_ptr<WsClient::Connection> connection, string message_st
 	if (radioTalking)
 	{
 		setClientTalking(true);
-		if (!isTalking && radioClicks == true && local_click_on == true)
-			playWavFile("mic_click_on");
 		isTalking = true;
 	}
 	else
@@ -235,8 +228,6 @@ int handleMessage(shared_ptr<WsClient::Connection> connection, string message_st
 		if (isTalking)
 		{
 			setClientTalking(false);
-			if (radioClicks == true && local_click_off == true)
-				playWavFile("mic_click_off");
 			isTalking = false;
 		}
 	}
@@ -273,10 +264,6 @@ int handleMessage(shared_ptr<WsClient::Connection> connection, string message_st
 
 				if (channelName == thisChannelName && UUID == gameUUID) {
 					foundPlayer = true;
-					if (isRadioEffect == true && tokovoip->getRadioData(UUID) == false && remote_click_on == true)
-						playWavFile("mic_click_on");
-					if (remote_click_off == true && isRadioEffect == false && tokovoip->getRadioData(UUID) == true && clientId != getMyId(serverId))
-						playWavFile("mic_click_off");
 					tokovoip->setRadioData(UUID, isRadioEffect);
 					if (muted)
 						setClientMuteStatus(serverId, clientId, true);
@@ -409,7 +396,7 @@ DWORD WINAPI WebSocketService(LPVOID lpParam) {
 
 void initWebSocket(bool ignoreRunning) {
 	if (!ignoreRunning && isWebsocketThreadRunning()) {
-		outputLog("Tokovoip is already running or handshaking. You can force disconnect it via the menu Plugins->TokoVoip->Disconnect");
+		outputLog("TokovoIP is already running or handshaking. You can force disconnect it via the menu Plugins->TokoVoIP->Disconnect");
 		return;
 	}
 	outputLog("Initializing WebSocket Thread", 0);
@@ -455,7 +442,7 @@ string getWebSocketEndpoint() {
 			bool inTokovoipChannel = stringIncludes((string)getChannelName(serverId, getMyId(serverId)), "tokovoip");
 			// If auto detect boot, stop handhshaking once we leave the channel
 			if (wasAutoBoot && !inTokovoipChannel) {
-				outputLog("Not in tokovoip channel anymore, stopping handshake");
+				outputLog("Not in TokoVoIP channel anymore, stopping handshake");
 				return "";
 			}
 			// More retries if current channel has tokovoip in name, only 5 reties otherwise
@@ -673,13 +660,13 @@ void onButtonClicked(uint64 serverConnectionHandlerID, PluginMenuType type, int 
 			);
 			if (!ok || text.isEmpty()) return;
 			outputLog("Setting currentEndpoint to: " + text.toStdString());
+			killWebsocketThread();
 			currentEndpoint = text.toStdString();
 			cfg.beginGroup("TokoVOIP");
 			{
 				cfg.setValue("currentEndpoint", QString::fromStdString(currentEndpoint));
 			}
 			cfg.endGroup();
-			killWebsocketThread();
 			initWebSocket();
 		}
 	}
@@ -730,12 +717,12 @@ bool isWebsocketThreadRunning() {
 
 bool killWebsocketThread() {
 	if (isWebsocketThreadRunning()) {
-		outputLog("TokoVoip is still in the process of running or handshaking. Killing ...");
+		outputLog("TokoVoIP is still in the process of running or handshaking. Killing ...");
 		if (wsConnection) wsConnection->send_close(0);
 		TerminateThread(threadWebSocket, 0);
 		Sleep(1000);
 		if (isWebsocketThreadRunning()) {
-			outputLog("Failed to kill running tokovoip.");
+			outputLog("Failed to kill running TokoVoIP.");
 			return false;
 		}
 		outputLog("Successfully killed running instance.");
@@ -758,7 +745,7 @@ void onTokovoipClientMove(uint64 sch_id, anyID client_id, uint64 old_channel_id,
 	ts3Functions.getChannelVariableAsString(serverId, new_channel_id, CHANNEL_NAME, &channelName);
 	if (channelName == "") return;
 	if (stringIncludes((string)channelName, "tokovoip")) {
-		outputLog("Detected 'TokoVoip' in channel name, booting ..");
+		outputLog("Detected 'tokovoip' in channel name, booting ..");
 		initWebSocket();
 	}
 }
@@ -780,19 +767,6 @@ bool isChannelWhitelisted(json data, string channel) {
 		if (whitelistedChannel == channel) return true;
 	}
 	return false;
-}
-
-void playWavFile(const char* fileNameWithoutExtension)
-{
-	char pluginPath[PATH_BUFSIZE];
-	ts3Functions.getPluginPath(pluginPath, PATH_BUFSIZE, tokovoip->plugin->id().c_str());
-	std::string path = std::string((string)pluginPath);
-	DWORD error;
-	std::string to_play = path + "tokovoip/" + std::string(fileNameWithoutExtension) + ".wav";
-	if ((error = ts3Functions.playWaveFile(ts3Functions.getCurrentServerConnectionHandlerID(), to_play.c_str())) != ERROR_ok)
-	{
-		outputLog("can't play sound", error);
-	}
 }
 
 void	setClientName(string name) {
