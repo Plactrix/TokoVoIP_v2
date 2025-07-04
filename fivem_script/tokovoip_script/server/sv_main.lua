@@ -179,9 +179,5 @@ function getPlayersInRadioChannel(channel)
 	return channels[channel].subscribers
 end
 
-if Config.update then
-    lib.versionCheck('Plactrix/TokoVoIP_v2')
-end
-
 -- Exports
 exports("getPlayersInRadioChannel", getPlayersInRadioChannel)
