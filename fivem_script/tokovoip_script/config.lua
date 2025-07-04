@@ -6,16 +6,20 @@ Config.networkRefreshRate     = 2000    -- Rate to update/reset network data on 
 Config.playerListRefreshRate  = 5000    -- Rate at which the player list is updated (ms)
 
 -- Versioning & Debug
-Config.minVersion             = "1.0.0" -- Required TS plugin version
+Config.minVersion             = "1.0.0" --  Minimum required TS plugin version
 Config.enableDebug            = false   -- Enable/disable TokoVoIP debug (Shift+9)
 Config.update                 = true    -- Enable/disable version check
+
+Config.UseOXlib								= false
+-- true: Use ox_libs Version Check - false: Use the default Version Check
+-- if true: uncomment the '@ox_lib/init.lua' line in the fxmanifest.lua
 
 -- Voice Distances (in GTA distance units)
 Config.distance = {
     2,  -- Whisper
     5,  -- Normal
     7,  -- Shouting
-    -- 40, -- Uncomment for Theatre Mode
+    -- 40, -- Uncomment for Theater Mode
 }
 
 -- Direction Handling
@@ -26,7 +30,7 @@ Config.headingType            = 0       -- 0 = camera heading, 1 = character hea
 -- Keybinds
 Config.radioKey               = "CAPITAL" -- Talk on radio
 Config.keySwitchChannels      = 20        -- Switch radio channels
-Config.keySwitchChannelsSecondary = 21    -- Use with keySwitchChannels for dual-keypress
+Config.keySwitchChannelsSecondary = 21    -- Use with keySwitchChannels for dual-keypress, or set to false to disable
 Config.keyProximity           = "G"       -- Switch proximity mode
 
 -- Radio Settings
@@ -35,7 +39,7 @@ Config.radioAnim              = true   -- Enable/disable radio animation
 Config.radioEnabled           = true   -- Enable/disable radio usage
 
 -- WebSocket Server
-Config.wsServer               = "XxX.XxX.XxX.XxX.XXXXX" -- WS server IP and port
+Config.wsServer               = "XxX.XxX.XxX.XxX:XXXXX" -- WS server IP and port
 Config.displayWSInfo          = true   -- Show WebSocket info on blocking screen
 Config.enableBlockingScreen   = true  -- Enable/disable black background blocking screen
 
@@ -43,8 +47,8 @@ Config.enableBlockingScreen   = true  -- Enable/disable black background blockin
 Config.plugin_data = {
     -- TeamSpeak Channels
     TSChannel              = "[TokoVoIP] In-Game",     -- Main TS channel
-    TSPassword             = "",                       -- TS channel password
-    TSChannelWait          = "[TokoVoIP] Waiting Room", -- Optional 8only if you want a separate waiting room). You NEED TokoVoIP in the wait channel name!
+    TSPassword             = "",                       -- TS channel password for the In-Game channel (Optional)
+    TSChannelWait          = "[TokoVoIP] Waiting Room", -- Optional (only if you want a separate waiting room). You NEED TokoVoIP in the wait channel name!
 
     -- Blocking Screen Info
     TSServer               = "ts.example.com",         -- Displayed TS server address
