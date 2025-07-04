@@ -16,7 +16,7 @@ ui_page 'html/index.html'
 
 shared_scripts {
     'config.lua',
-    '@ox_lib/init.lua'
+    -- '@ox_lib/init.lua'
 }
 
 client_scripts {
@@ -29,7 +29,7 @@ server_scripts {
     'server/sv_main.lua'
 }
 
-dependency 'ox_lib'
+-- dependency 'ox_lib'
 
 provides {
     'mumble-voip',
