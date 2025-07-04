@@ -12,7 +12,7 @@ Config.update                 = true    -- Enable/disable version check
 
 Config.UseOXlib								= false
 -- true: Use ox_libs Version Check - false: Use the default Version Check
--- if true: uncomment the '@ox_lib/init.lua' line in the fxmanifest.lua
+-- if true: uncomment line 19 and 32 in the fxmanifest.lua
 
 -- Voice Distances (in GTA distance units)
 Config.distance = {
