@@ -39,6 +39,8 @@ Config.radioAnim              = true   -- Enable/disable radio animation
 Config.radioEnabled           = true   -- Enable/disable radio usage
 
 -- WebSocket Server
+
+Config.wsServer               = "127.0.0.1:33250" -- Only change if your ws_server is external. WS server IP and port
 Config.displayWSInfo          = true   -- Show WebSocket info on blocking screen
 Config.enableBlockingScreen   = true  -- Enable/disable black background blocking screen
 
@@ -48,7 +50,6 @@ Config.plugin_data = {
     TSChannel              = "[TokoVoIP] In-Game",     -- Main TS channel
     TSPassword             = "",                       -- TS channel password for the In-Game channel (Optional)
     TSChannelWait          = "[TokoVoIP] Waiting Room", -- Optional (only if you want a separate waiting room). You NEED TokoVoIP in the wait channel name!
-
     
     -- Blocking Screen Info
     TSServer               = "ts.example.com",         -- Displayed TS server address
