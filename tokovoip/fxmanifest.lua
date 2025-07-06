@@ -5,6 +5,7 @@ author 'Itokoyamato, Plactrix & Neon'
 description 'TokoVoIP V2: A simple FiveM VoIP script that uses TeamSpeak as the voice server'
 version '2.5.0'
 lua54 'yes'
+node_version '22'
 
 files {
     'html/sounds/*.wav',
@@ -39,5 +40,6 @@ provides {
 
 dependencies {
     -- 'ox_lib',
-    'yarn'
+    'yarn',
+    '/server:12913'
 }

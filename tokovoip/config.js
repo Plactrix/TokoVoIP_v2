@@ -1,5 +1,5 @@
 module.exports = {
-  enableintegratedws: false,
+  enableintegratedws: true,
   TSServer: '152.53.181.170',
   WSServerIP: '127.0.0.1',
   WSServerPort: 33250,

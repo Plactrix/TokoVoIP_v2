@@ -10,6 +10,6 @@
 [submodule "ts3_plugin/deps/cpp-httplib"]
 	path = ts3_plugin/deps/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib
-[submodule "ts3_plugin/deps/teamspeak-plugin-radiofx"]
-	path = ts3_plugin/deps/teamspeak-plugin-radiofx
-	url = https://github.com/Plactrix/teamspeak-plugin-radiofx-ts26.git
+[submodule "deps/teamspeak-plugin-qt-common"]
+	path = deps/teamspeak-plugin-qt-common
+	url = https://github.com/Plactrix/teamspeak-plugin-qt-common
