@@ -1,11 +1,10 @@
 {
   "name": "ws_server",
-  "version": "2.0.3",
+  "version": "2.0.4",
   "description": "Websocket Server for TokoVoIP V2",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "Itokoyamato",
@@ -21,5 +20,8 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.21"
+  },
+  "resolutions": {
+  "meow": "^10.1.1"
   }
 }
