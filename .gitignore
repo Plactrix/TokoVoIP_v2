@@ -55,3 +55,4 @@ Temporary Items
 
 # VSCode
 .vscode
+/master_server/node_modules
