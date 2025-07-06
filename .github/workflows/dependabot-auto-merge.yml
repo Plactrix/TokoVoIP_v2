@@ -31,9 +31,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ws_server
 
       - name: Run index.js
         run: node index.js
+        working-directory: ws_server
 
       - name: Enable auto-merge for Dependabot PRs
         uses: peter-evans/enable-pull-request-automerge@v3
@@ -59,9 +61,11 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+        working-directory: ws_server
 
       - name: Run index.js
         run: node index.js
+        working-directory: ws_server
 
       - name: Enable auto-merge for Dependabot PRs
         uses: peter-evans/enable-pull-request-automerge@v3
