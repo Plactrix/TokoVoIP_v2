@@ -7,9 +7,9 @@
 [submodule "ts3_plugin/deps/json"]
 	path = ts3_plugin/deps/json
 	url = https://github.com/nlohmann/json.git
-[submodule "ts3_plugin/deps/teamspeak-plugin-radiofx"]
-	path = ts3_plugin/deps/teamspeak-plugin-radiofx
-	url = https://github.com/Plactrix/teamspeak-plugin-radiofx-ts26
 [submodule "ts3_plugin/deps/cpp-httplib"]
 	path = ts3_plugin/deps/cpp-httplib
 	url = https://github.com/yhirose/cpp-httplib
+[submodule "ts3_plugin/deps/teamspeak-plugin-radiofx"]
+	path = ts3_plugin/deps/teamspeak-plugin-radiofx
+	url = https://github.com/Plactrix/teamspeak-plugin-radiofx-ts26.git
