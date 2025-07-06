@@ -4,11 +4,6 @@ The current [TokoVoIP V2](https://github.com/Plactrix/TokoVoIP_v2) is a continua
 
 TokoVoIP is a FiveM voice plugin that leverages TeamSpeak to provide high-quality, realistic proximity-based voice communication. [Plactrix](https://github.com/Plactrix) and [PinguinPocalypse](https://github.com/GamingLuke1337)decided to maintain and improve the original project.
 
-![GitHub Downloads (this repo) (all assets, all releases)](https://img.shields.io/github/downloads/GamingLuke1337/TokoVoIP_v2/total)
-![GitHub Downloads (Plactrix) (all assets, all releases)](https://img.shields.io/github/downloads/Plactrix/TokoVoIP_v2/total)
-![GitHub Downloads (Itokoyamato) (all assets, all releases)](https://img.shields.io/github/downloads/itokoyamato/TokoVoIP_v2/total)
-
-
 ---
 
 ## Key Features
