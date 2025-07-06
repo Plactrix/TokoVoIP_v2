@@ -1,27 +1,22 @@
 {
   "name": "ws_server",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "Websocket Server for TokoVoIP V2",
-  "main": "index.js",
+  "main": "index.mjs",
   "scripts": {
-    "start": "node index.js"
+    "start": "node index.mjs"
   },
   "keywords": [],
   "author": "Itokoyamato",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.2",
-    "chalk": "^4.1.0",
-    "console-stamp": "^0.2.10",
-    "express": "^4.18.2",
+   "axios": "^1.6.8",
+    "chalk": "^5.3.0",
+    "express": "^5.1.0",
     "lodash": "^4.17.21",
-    "public-ip": "^4.0.1",
-    "socket.io": "^2.5.0"
+    "socket.io": "^4.7.5"
   },
-  "devDependencies": {
-    "nodemon": "^2.0.21"
-  },
-  "resolutions": {
-  "meow": "^10.1.1"
+  "engines": {
+    "node": ">=18.0.0"
   }
 }
