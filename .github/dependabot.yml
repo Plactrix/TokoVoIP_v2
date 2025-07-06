@@ -11,5 +11,15 @@ updates:
       prefix: "chore"
     labels:
       - "dependencies"
-    reviewers:
-      - "GamingLuke1337"
+
+  - package-ecosystem: "npm"
+    directory: "/master_server"
+    schedule:
+      interval: "weekly"
+    target-branch: "main"
+    allow:
+      - dependency-type: "all"
+    commit-message:
+      prefix: "chore"
+    labels:
+      - "dependencies"
