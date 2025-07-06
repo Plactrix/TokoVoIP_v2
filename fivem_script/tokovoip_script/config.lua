@@ -7,6 +7,7 @@ Config.playerListRefreshRate  = 5000    -- Rate at which the player list is upda
 
 -- Versioning & Debug
 Config.minVersion             = "1.0.0" --  Minimum required TS plugin version
+Config.minVersion             = "1.0.0" -- Required TS plugin version
 Config.enableDebug            = false   -- Enable/disable TokoVoIP debug (Shift+9)
 Config.update                 = true    -- Enable/disable version check
 
@@ -23,14 +24,13 @@ Config.distance = {
 }
 
 -- Direction Handling
-Config.headingType            = 0       -- 0 = camera heading, 1 = character heading
- -- 0 uses GetGameplayCamRot, basing heading on the camera's heading, to match how other GTA sounds work. headingType 1 uses GetEntityHeading which is based on the character's direction
-
+Config.headingType            = 0
+-- 0 uses GetGameplayCamRot, basing heading on the camera's heading, to match how other GTA sounds work. headingType 1 uses GetEntityHeading which is based on the character's direction
 
 -- Keybinds
 Config.radioKey               = "CAPITAL" -- Talk on radio
 Config.keySwitchChannels      = 20        -- Switch radio channels
-Config.keySwitchChannelsSecondary = 21    -- Use with keySwitchChannels for dual-keypress, or set to false to disable
+Config.keySwitchChannelsSecondary = 21    -- Use with keySwitchChannels for dual-keypress, or set to 0 to disable
 Config.keyProximity           = "G"       -- Switch proximity mode
 
 -- Radio Settings
@@ -39,7 +39,6 @@ Config.radioAnim              = true   -- Enable/disable radio animation
 Config.radioEnabled           = true   -- Enable/disable radio usage
 
 -- WebSocket Server
-Config.wsServer               = "XxX.XxX.XxX.XxX:XXXXX" -- WS server IP and port
 Config.displayWSInfo          = true   -- Show WebSocket info on blocking screen
 Config.enableBlockingScreen   = true  -- Enable/disable black background blocking screen
 
@@ -50,6 +49,7 @@ Config.plugin_data = {
     TSPassword             = "",                       -- TS channel password for the In-Game channel (Optional)
     TSChannelWait          = "[TokoVoIP] Waiting Room", -- Optional (only if you want a separate waiting room). You NEED TokoVoIP in the wait channel name!
 
+    
     -- Blocking Screen Info
     TSServer               = "ts.example.com",         -- Displayed TS server address
     TSChannelSupport       = "Support 1",              -- Support channel shown on blocking screen

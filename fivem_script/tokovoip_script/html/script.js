@@ -11,10 +11,10 @@
 // ------------------------------------------------------------
 
 // --------------------------------------------------------------------------------
-// --	Using websockets to send data to TS3Plugin
+// --  Using websockets to send data to TS3Plugin
 // --------------------------------------------------------------------------------
 
-function getTickCount () {
+function getTickCount() {
 	let date = new Date();
 	let tick = date.getTime();
 	return (tick);
@@ -49,7 +49,7 @@ let wsStates = {
 	}
 }
 
-function disconnect (src) {
+function disconnect(src) {
 	updateWsState(src, NOT_CONNECTED)
 	voipStatus = NOT_CONNECTED
 
@@ -86,16 +86,16 @@ async function init(address, serverId) {
 	if (!address) return;
 	endpoint = address;
 	await updateClientIP(endpoint);
-    if (voip.enableDebug) {
+	if (voip.enableDebug) {
 		console.log('TokoVoIP: attempt new connection');
-    }
+	}
 	websocket = new WebSocket(`ws://${endpoint}/socket.io/?EIO=3&transport=websocket&from=fivem&serverId=${serverId}`);
 
 	websocket.onopen = () => {
 		updateWsState('FiveM', OK)
-        if (voip.enableDebug) {
+		if (voip.enableDebug) {
 			console.log('TokoVoIP: connection opened');
-        }
+		}
 		connected = true;
 		updateWsState('FiveM', OK)
 	};
@@ -135,9 +135,9 @@ async function init(address, serverId) {
 	websocket.onclose = () => {
 
 		disconnect('FiveM')
-        if (voip.enableDebug) {
+		if (voip.enableDebug) {
 			console.log('FiveM Disconnected')
-        }
+		}
 
 		updateWsState('FiveM', NOT_CONNECTED)
 
@@ -172,19 +172,19 @@ async function init(address, serverId) {
 			reason = 'Unknown reason';
 		if (voip.enableDebug) {
 			console.log('TokoVoIP: closed connection - ' + reason);
-        }
+		}
 		connected = false;
 		updateScriptData('pluginStatus', -1);
 		init(endpoint);
 	};
 }
 
-function sendData (message) {
+function sendData(message) {
 	if (websocket.readyState != websocket.OPEN) return;
 	websocket.send(`42${JSON.stringify(['data', message])}`);
 }
 
-function receivedClientCall (event) {
+function receivedClientCall(event) {
 	const eventName = event.data.type;
 	const payload = event.data.payload;
 
@@ -229,7 +229,7 @@ function receivedClientCall (event) {
 	updateTokovoipInfo();
 }
 
-function checkPluginStatus () {
+function checkPluginStatus() {
 	switch (parseInt(voip.pluginStatus)) {
 		case -1:
 			voipStatus = NOT_CONNECTED;
@@ -253,7 +253,7 @@ function checkPluginStatus () {
 	}
 }
 
-function checkPluginVersion () {
+function checkPluginVersion() {
 	if (isPluginVersionCorrect()) {
 		document.getElementById('pluginVersion').innerHTML = `Plugin version: <font color="green">${voip.pluginVersion}</font> (up-to-date)`;
 	} else {
@@ -262,20 +262,20 @@ function checkPluginVersion () {
 	}
 }
 
-function isPluginVersionCorrect () {
+function isPluginVersionCorrect() {
 	if (!voip.pluginVersion) return false;
 	if (parseInt(voip.pluginVersion.replace(/\./g, '')) < parseInt(voip.minVersion.replace(/\./g, ''))) return false;
 	return true;
 }
 
-function displayPluginScreen (toggle) {
+function displayPluginScreen(toggle) {
 	document.getElementById('pluginScreen').style.display = (toggle) ? 'block' : 'none';
 	if (voip.enableBlockingScreen && toggle) {
 		document.getElementById("pluginScreen").style.backgroundImage = "radial-gradient(rgb(23, 23, 23), rgb(0, 0, 0)";
 	}
 }
 
-function updateTokovoipInfo (msg) {
+function updateTokovoipInfo(msg) {
 	document.getElementById('tokovoipInfo').style.fontSize = '12px';
 	let screenMessage;
 
@@ -318,7 +318,7 @@ function updateTokovoipInfo (msg) {
 	document.getElementById('pluginStatus').innerHTML = `Plugin status: <font color="${color}">${screenMessage || msg}</font>`;
 }
 
-function updateWsState (ws, state) {
+function updateWsState(ws, state) {
 	wsStates[ws].state = state
 	for (const [k, v] of Object.entries(wsStates)) {
 		switch (v.state) {
@@ -335,7 +335,18 @@ function updateWsState (ws, state) {
 	}
 }
 
-function updateConfig (payload) {
+async function getPublicIP() {
+	try {
+		const response = await fetch('https://api.ipify.org?format=json');
+		const data = await response.json();
+		return data.ip;
+	} catch {
+		return 'IP not found';
+	}
+	voip.wsServer = await getPublicIP();
+}
+
+function updateConfig(payload) {
 	voip = payload;
 	document.getElementById('TSServer').innerHTML = `TeamSpeak server: <font color="#01b0f0">${voip.plugin_data.TSServer}</font>`;
 	document.getElementById('TSChannel').innerHTML = `TeamSpeak channel: <font color="#01b0f0">${(voip.plugin_data.TSChannelWait) ? voip.plugin_data.TSChannelWait.replace(/\[[a-z]spacer(.*?)\]/, '') : voip.plugin_data.TSChannel.replace(/\[[a-z]spacer(.*?)\]/, '')}</font>`;
@@ -345,16 +356,16 @@ function updateConfig (payload) {
 	document.getElementById('wsInfo').innerHTML = `WS Server address: <font color="#01b0f0">${voip.wsServer}</font>`;
 }
 
-function updatePlugin () {
+function updatePlugin() {
 	if (!connected) return;
 	sendData(voip.plugin_data);
 }
 
-function canCallCallback (str) {
+function canCallCallback(str) {
 	return str.toLowerCase() == str
 }
 
-function updateScriptData (key, data) {
+function updateScriptData(key, data) {
 	if (voip[key] === data) return;
 	if (!canCallCallback(scriptName)) {
 		voipStatus = INCORRECT_SCRIPTNAME
