@@ -4,7 +4,7 @@ updates:
     directory: "/ws_server"
     schedule:
       interval: "weekly"
-    target-branch: "main"
+    target-branch: "master"
     allow:
       - dependency-type: "all"
     commit-message:
@@ -16,7 +16,7 @@ updates:
     directory: "/master_server"
     schedule:
       interval: "weekly"
-    target-branch: "main"
+    target-branch: "master"
     allow:
       - dependency-type: "all"
     commit-message:
