@@ -1,7 +1,7 @@
 name: Dependabot Auto Merge
 
 on:
-  pull_request:
+  pull_request_target:
     types:
       - opened
       - synchronize
@@ -13,7 +13,7 @@ permissions:
 
 jobs:
   dependabot-ws:
-    if: github.actor == 'dependabot[bot]' && startsWith(github.head_ref, 'dependabot/npm_and_yarn/ws_server/')
+    if: github.actor == 'dependabot[bot]' && startsWith(github.head_ref, 'dependabot/npm_and_yarn/ws_server')
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -23,11 +23,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 24
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
         run: npm install
@@ -41,7 +41,7 @@ jobs:
           merge-method: squash
 
   dependabot-master:
-    if: github.actor == 'dependabot[bot]' && startsWith(github.head_ref, 'dependabot/npm_and_yarn/master_server/')
+    if: github.actor == 'dependabot[bot]' && startsWith(github.head_ref, 'dependabot/npm_and_yarn/master_server')
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -51,11 +51,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Use Node.js 24
+      - name: Setup Node.js 24
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
         run: npm install
