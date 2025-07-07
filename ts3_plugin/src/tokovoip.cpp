@@ -669,6 +669,33 @@ void onButtonClicked(uint64 serverConnectionHandlerID, PluginMenuType type, int 
 			cfg.endGroup();
 			initWebSocket();
 		}
+		else if (menuItemID == manualConnectButtonId) {
+			QSettings cfg(TSHelpers::GetFullConfigPath(), QSettings::IniFormat);
+			cfg.beginGroup("TokoVOIP");
+			{
+				currentEndpoint = cfg.value("currentEndpoint", "").toString().toStdString();
+			}
+			cfg.endGroup();
+			bool ok;
+			QString text = QInputDialog::getText(0,
+				"Manual connect",
+				"\nEnter the ws_server address below\n\nYou can find it on the in-game blocking screen\nOr ask the server owner/support\n\n",
+				QLineEdit::Normal,
+				QString::fromStdString(currentEndpoint),
+				&ok,
+				Qt::WindowCloseButtonHint
+			);
+			if (!ok || text.isEmpty()) return;
+			outputLog("Setting currentEndpoint to: " + text.toStdString());
+			currentEndpoint = text.toStdString();
+			cfg.beginGroup("TokoVOIP");
+			{
+				cfg.setValue("currentEndpoint", QString::fromStdString(currentEndpoint));
+			}
+			cfg.endGroup();
+			killWebsocketThread();
+			initWebSocket();
+		}
 	}
 }
 
