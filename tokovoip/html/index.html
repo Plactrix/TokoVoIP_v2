@@ -1,0 +1,176 @@
+<html>
+
+<head>
+   <style>
+      body {
+         margin: 0;
+         padding: 0;
+         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+         background:
+            linear-gradient(to bottom right, #1e1e2f, #2b2b3c),
+            url('./background.jpg') no-repeat center center fixed;
+         background-size: cover;
+         color: #fff;
+      }
+
+      .pluginScreen {
+         display: flex;
+         align-items: center;
+         justify-content: center;
+         width: 100%;
+         height: 100vh;
+         position: absolute;
+         top: 0;
+         left: 0;
+      }
+
+      .pluginScreenWindow {
+         background: rgba(0, 0, 0, 0.75);
+         backdrop-filter: blur(10px);
+         border-radius: 20px;
+         padding: 30px;
+         width: 850px;
+         color: #eee;
+         font-size: 14px;
+         text-shadow: 1px 1px #000;
+         box-shadow: 0 0 20px rgba(0, 0, 0, 0.6);
+      }
+
+      .pluginScreenWindow h1 {
+         font-size: 28px;
+         color: #f0eb01;
+         margin-bottom: 20px;
+         text-align: center;
+      }
+
+      ul {
+         list-style-type: none;
+         padding: 0;
+         margin: 10px 0;
+      }
+
+      ul li {
+         margin-bottom: 10px;
+      }
+
+      #latency {
+         bottom: 30px;
+         right: 30px;
+         position: absolute;
+         font-size: 18px;
+         font-weight: 400;
+         color: white;
+      }
+
+      .tokovoipInfo {
+         position: absolute;
+         right: 20px;
+         bottom: 20px;
+         font-weight: bold;
+         color: white;
+         font-size: 16px;
+      }
+
+      .talking {
+         color: rgba(244, 196, 65, 1);
+      }
+
+      .normal {
+         color: #01b0f0;
+      }
+
+      .copyrights {
+         padding: 5px;
+         font-size: 12px;
+         opacity: 0.3;
+         text-align: center;
+      }
+   </style>
+   <script src="nui://game/ui/jquery.js" type="text/javascript"></script>
+   <script src="script.js" type="text/javascript"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/howler/2.1.1/howler.min.js" type="text/javascript"></script>
+   <script>
+      var audioPlayer = null;
+      window.addEventListener('message', function (event) {
+         if (event.data.transactionType == "playSound") {
+            if (audioPlayer != null) {
+               audioPlayer.pause();
+            }
+            audioPlayer = new Howl({ src: ["./sounds/" + event.data.transactionFile + ".wav"] });
+            audioPlayer.volume(event.data.transactionVolume);
+            audioPlayer.play();
+         }
+      });
+   </script>
+</head>
+
+<body>
+   <div id="pluginScreen" class="pluginScreen">
+      <div id="pluginScreenWindow" class="pluginScreenWindow">
+         <div style="font-size:25px;color:#FFFFFF;text-align:center;margin-bottom:20px;">
+            TOKOVOIP SCRIPT
+         </div>
+         <center>
+            <font style="color: #ff0000;">TokoVOIP</font> is our in-game VOIP replacement for FiveM. We also require
+            a
+            TeamSpeak3 Plugin which can be downloaded below
+         </center>
+         <br>
+         <center>
+            <font style="color: #ff0000">TokoVOIP</font> is required to be <font color="#d62323">installed</font>
+            and
+            <font color="#d62323">
+               running
+            </font> to play on the server.
+         </center>
+         <br>
+         <center>You can find more <font color="#f0eb01">information</font> and <font color="#f0eb01">download</font>
+            links in the #tokovoip channel in our Discord.</center> <!-- Edit this to fit your needs -->
+         <br>
+         <center>
+            <div id="TSServer">
+               TeamSpeak server:
+            </div>
+            <div id="TSChannel">
+               TeamSpeak channel:
+            </div>
+            <div id="wsInfo">
+               WS Server address:
+            </div>
+            <div id="TSDownload">
+               TS3 Plugin Download:
+            </div>
+         </center>
+         <br>
+         <center>
+            <ul>
+               <li id="pluginStatus">Plugin status: <font color="red">OFFLINE</font>
+               </li>
+               <li id="FiveMState">FiveM websocket: <font color="red">Not connected</font>
+               </li>
+               <li id="Ts3State">Ts3 websocket: <font color="red">Not connected</font>
+               </li>
+               <br>
+               <li id="pluginVersion">Plugin version: <font color="red">Not found</font> (Required: 2.0.0)</li>
+            </ul>
+         </center>
+         <center>
+            <p>NOTE: if you are not being moved to the In-Game channel, then go to <font style="color: #ff0000">
+                  Plugins
+               </font>
+               <font style="color: #ffffff">></font>
+               <font style="color: #ff0000">TokoVoIP</font>
+               <font style="color: #ffffff">></font>
+               <font style="color: #ff0000">Connect</font> on your TeamSpeak client.
+            </p>
+         </center>
+      </div>
+   </div>
+   <div class="copyrights">
+   </div>
+   <div id="tokovoipInfo" class="tokovoipInfo">
+   </div>
+   <div id="latency" style="display: none;"></div>
+</body>
+
+</html>

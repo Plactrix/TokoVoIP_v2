@@ -1,0 +1,21 @@
+{
+  "name": "ws_server",
+  "version": "2.5.0", 
+  "description": "Websocket Server for TokoVoIP V2 -- FUTURE",
+  "main": "server/ws/index.js",
+  "scripts": {
+    "start": "node server/ws/index.js"
+  },
+  "keywords": [],
+  "author": "TokoVoIP Team",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.6.8",
+    "chalk": "^4.1.2",
+    "express": "^4.19.2",
+    "lodash": "^4.17.21",
+    "public-ip": "^4.0.4",
+    "socket.io": "^4.7.5"
+  }
+}
+

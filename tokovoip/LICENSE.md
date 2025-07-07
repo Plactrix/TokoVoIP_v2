@@ -1,3 +1,6 @@
+This project includes code from ox_lib (https://github.com/overextended/ox_lib), licensed under the GNU Lesser General Public License v3.0 or later.
+
+
 On screen displays of TokoVOIP and copyrights must remain visible and readable.
 You are allowed however to change their position and design.
 For the rest, the following applies:
