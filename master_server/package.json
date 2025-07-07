@@ -1,17 +1,20 @@
 {
-  "name": "tokovoip-proxy-master",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js"
-  },
-  "author": "Itokoyamato",
-  "license": "ISC",
-  "dependencies": {
-    "chalk": "^4.1.0",
-    "console-stamp": "^0.2.9",
-    "cron": "^1.8.2",
-    "express": "^4.17.1"
-  }
+	"name": "tokovoip-proxy-master",
+	"version": "1.0.1",
+	"description": "Master Proxy for TokoVoIP",
+	"main": "index.js",
+	"scripts": {
+		"start": "node index.js"
+	},
+	"author": "Itokoyamato",
+	"license": "ISC",
+	"dependencies": {
+		"chalk": "4.1.2",
+		"console-stamp": "3.1.2",
+		"cron": "4.3.1",
+		"express": "5.1.0"
+	},
+	"trustedDependencies": [
+		"console-stamp"
+	]
 }
