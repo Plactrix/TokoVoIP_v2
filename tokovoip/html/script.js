@@ -14,8 +14,6 @@
 // --  Using websockets to send data to TS3Plugin
 // --------------------------------------------------------------------------------
 
-const config = require("./config.js");
-
 function getTickCount() {
 	let date = new Date();
 	let tick = date.getTime();
@@ -336,20 +334,16 @@ function updateWsState(ws, state) {
 		document.getElementById(`${k}State`).innerHTML = `${k} websocket: <font color="${v.color}">${v.msg}</font>`;
 	}
 }
+
 async function getPublicIP() {
 	try {
-		const response = await fetch("https://api.ipify.org?format=json");
+		const response = await fetch('https://api.ipify.org?format=json');
 		const data = await response.json();
 		return data.ip;
 	} catch {
-		return "IP not found";
+		return 'IP not found';
 	}
-}
-
-if (config.enableintegratedws === true) {
 	voip.wsServer = await getPublicIP();
-} else {
-	voip.wsServer = config.wsServer;
 }
 
 function updateConfig(payload) {

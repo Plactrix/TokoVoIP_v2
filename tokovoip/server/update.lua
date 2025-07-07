@@ -1,5 +1,7 @@
 if Config.UseOXlib and Config.update then
   lib.versionCheck('Plactrix/TokoVoIP_v2')
+  -- lib.versionCheck('Itokoyamato/TokoVoIP') -- FUTURE
+
 
   elseif not Config.UseOXlib and Config.update then
 
@@ -47,4 +49,5 @@ if Config.UseOXlib and Config.update then
     end
     
     versionCheck('Plactrix/TokoVoIP_v2')
+    -- versionCheck('Itokoyamato/TokoVoIP') -- FUTURE
 end
