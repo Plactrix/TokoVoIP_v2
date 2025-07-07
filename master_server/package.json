@@ -7,7 +7,7 @@
     "start": "node index.mjs"
   },
   "author": "Itokoyamato",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "chalk": "^5.3.0",
     "express": "^5.1.0",
