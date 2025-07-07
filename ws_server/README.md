@@ -1,42 +1,34 @@
-# TokoVOIP Master Server
+# TokoVoIP `ws-server`
 
-## API Endpoints
+---
 
-### Health Check
-- `GET /health` - Returns server status and uptime information
+### 1. **Install Node.js**
 
-### Client Management
-- `POST /register` - Register a client for handshake coordination
-- `GET /handshake` - Retrieve handshake information for the requesting IP
+Download and install the latest version of [Node.js](https://nodejs.org/en/).
 
-### Server Management
-- `POST /heartbeat` - Send heartbeat from WebSocket servers to maintain registration
-- `GET /verify` - Verify if a TeamSpeak server is registered and active
+---
 
-### Version Control
-- `GET /version` - Get current plugin version information and update messages
+### 2. **Configure the server**
 
-## Installation
+Open the configuration file: [`ws_server/config.js`](https://github.com/Itokoyamato/TokoVoIP_TS3/blob/master/ws_server/config.js)
 
-1. Install dependencies:
+* Set the `TSServer` value to the **IP address** of your TeamSpeak server.
+* If hosting on a separate machine, ensure the `ws-server` is accessible by the FiveM server.
+
+---
+
+### 3. **Install dependencies and start the server**
+
+Open a terminal or command prompt in the `ws-server` directory and run:
+
 ```bash
 npm install
-```
-
-2. Start the server:
-```bash
 npm start
 ```
 
-## Automatic Cleanup
+---
 
-The server runs automatic cleanup jobs every 5 minutes to remove:
-- Handshakes that haven't been updated in 2 minutes
-- WebSocket servers that haven't sent heartbeats in 10 minutes
-- Empty TeamSpeak server entries
-
-
-### **(Optional) Run in the background and start automatically**
+### 4. **(Optional) Run in the background and start automatically**
 
 ---
 
@@ -48,12 +40,12 @@ The server runs automatic cleanup jobs every 5 minutes to remove:
 
    ```cmd
    @echo off
-   cd /d "C:\Path\To\master_server"
+   cd /d "C:\Path\To\ws-server"
    npm start
    ```
 
    Replace `C:\Path\To\ws-server` with the actual path.
-2. Save the file as `start-master-server.bat`.
+2. Save the file as `start-ws-server.bat`.
 3. Press `Win + R`, type `shell:startup`, and press Enter.
 4. Copy the `.bat` file into this folder.
 
@@ -63,7 +55,7 @@ The server runs automatic cleanup jobs every 5 minutes to remove:
 2. In the right pane, click **Create Task**.
 3. Under the **General** tab:
 
-   * Name the task (e.g., `master-server`).
+   * Name the task (e.g., `ws-server`).
    * Check "Run whether user is logged on or not".
    * Check "Run with highest privileges".
 4. Under the **Triggers** tab:
@@ -81,10 +73,10 @@ The server runs automatic cleanup jobs every 5 minutes to remove:
    * In the **Add arguments** box, enter:
 
      ```cmd
-     /c cd /d "C:\Path\To\master-server" && npm start
+     /c cd /d "C:\Path\To\ws-server" && npm start
      ```
 
-     Replace `C:\Path\To\master-server` with the actual path to your `master-server` directory.
+     Replace `C:\Path\To\ws-server` with the actual path to your `ws-server` directory.
 6. Click OK and enter your password if prompted.
 
 ---
@@ -102,15 +94,15 @@ sudo apt install screen -y
 ### Start the server in a screen session:
 
 ```bash
-screen -S tokovoip-master
-cd /path/to/master_server
+screen -S tokovoip
+cd /path/to/ws_server
 npm start
 ```
 
 > To **detach** from the screen: press `Ctrl + A`, then `D`
-> To **resume** later: `screen -r tokovoip-master`
+> To **resume** later: `screen -r tokovoip`
 > To **list** sessions: `screen -ls`
-> To **kill** a session: `screen -XS tokovoip-master quit`
+> To **kill** a session: `screen -XS tokovoip quit`
 
 ---
 
@@ -119,19 +111,19 @@ npm start
 ### 1. Create a systemd service file
 
 ```bash
-sudo nano /etc/systemd/system/master-toko.service
+sudo nano /etc/systemd/system/ws-server.service
 ```
 
 ### 2. Paste the following (edit paths and user as needed):
 
 ```ini
 [Unit]
-Description=TokoVoIP master server
+Description=TokoVoIP ws-server
 After=network.target
 
 [Service]
 User=yourusername
-WorkingDirectory=/home/yourusername/path/to/master_server
+WorkingDirectory=/home/yourusername/path/to/ws_server
 ExecStart=/usr/bin/npm start
 Restart=always
 Environment=NODE_ENV=production
@@ -143,22 +135,22 @@ WantedBy=multi-user.target
 > Replace:
 >
 > * `yourusername` with your Linux username.
-> * The `WorkingDirectory` path to your actual `master_server` folder.
+> * The `WorkingDirectory` path to your actual `ws_server` folder.
 > * Check `which npm` if it's installed in a different path.
 
 ### 3. Reload systemd, enable and start the service
 
 ```bash
 sudo systemctl daemon-reload
-sudo systemctl enable master-toko
-sudo systemctl start master-toko
+sudo systemctl enable ws-server
+sudo systemctl start ws-server
 ```
 
 ### 4. Check status / logs
 
 ```bash
-sudo systemctl status master-toko
-sudo journalctl -u master-toko -f
+sudo systemctl status ws-server
+sudo journalctl -u ws-server -f
 ```
 
 ---
@@ -166,6 +158,6 @@ sudo journalctl -u master-toko -f
 ### To stop or disable:
 
 ```bash
-sudo systemctl stop master-toko
-sudo systemctl disable master-toko
+sudo systemctl stop ws-server
+sudo systemctl disable ws-server
 ```

@@ -1,10 +1,10 @@
 module.exports = {
-  TSServer: 'xxx.xxx.xxx.xxx',
-  WSServerIP: '',
-  WSServerPort: 33250,
-  enableLogs: false,
+  TSServer: '127.0.0.1', // [Required] TS3 Server IP
+  WSServerIP: '',			   // [Optional] Uses Autoconfig if undefined
+  WSServerPort: 33250,		   // [Required] 
+  enableLogs: false,		   // Enable Logs
   masterServer: {
-    registerUrl: 'https://master.chemnitzcityrp.de/register',
-    heartbeatUrl: 'https://master.chemnitzcityrp.de/heartbeat'
+    registerUrl: 'https://master.tokovoip.itokoyamato.net/register',
+    heartbeatUrl: 'https://master.tokovoip.itokoyamato.net/heartbeat'
   }
 };
