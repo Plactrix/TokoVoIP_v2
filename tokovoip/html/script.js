@@ -394,10 +394,19 @@ async function getPublicIP() {
 		const response = await fetch('https://api.ipify.org?format=json');
 		const data = await response.json();
 		return data.ip;
-	} catch {
+	} catch (e) {
+		// Ignore errors here and try fallback
+		try {
+			const res = await fetch(`http://${endpoint}/getmyip`);
+			if (res.ok) {
+				const ip = await res.text();
+				return ip;
+			}
+		} catch (e2) {
+			// Ignore errors here
+		}
 		return 'IP not found';
 	}
-	voip.wsServer = await getPublicIP();
 }
 
 function updateConfig(payload) {

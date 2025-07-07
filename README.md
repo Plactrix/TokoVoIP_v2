@@ -57,15 +57,6 @@ If you find the plugin useful, consider supporting them:
 
 ---
 
-## Terms & Conditions 
-
-* A visible **TokoVOIP watermark** must be shown in-game
-  (You may move or redesign it, but it must remain visible.)
-
-* Refer to the [LICENSE](https://github.com/Itokoyamato/TokoVOIP_TS3/blob/master/LICENSE.md) for full terms.
-
----
-
 ## Credits & Dependencies
 
 * [Itokoyamato (Original Creator)](https://github.com/Itokoyamato/TokoVOIP_TS3)
