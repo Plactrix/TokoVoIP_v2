@@ -55,7 +55,7 @@ async function main() {
 
   config.TSServer = process.env.TSServer || config.TSServer;
   config.WSServerPort = parseInt(process.env.WSServerPort, 10) || parseInt(config.WSServerPort, 10);
-  WSServerIP = process.env.WSServerIP || WSServerIP;
+  config.WSServerIP = process.env.WSServerIP || config.WSServerIP;
 
   try {
     hostIP = await publicIp.v4(); // bevorzugt IPv4
@@ -68,17 +68,17 @@ async function main() {
     }
   }
 
-  if (!WSServerIP) {
-    WSServerIP = hostIP;
+  if (!config.WSServerIP || config.WSServerIP.trim() === '') {
+    config.WSServerIP = hostIP;
     console.log(
       chalk.yellow('AUTOCONFIG:') + ' Setting ' +
       chalk.cyan('WSServerIP') + ' to ' +
-      chalk.cyan(WSServerIP) + ' (you can manually edit in config.js)'
+      chalk.cyan(config.WSServerIP) + ' (you can manually edit in config.js)'
     );
-    await sleep(0);
   }
 
-  if (!config.TSServer || !WSServerIP || !config.WSServerPort) {
+
+  if (!config.TSServer || !config.WSServerIP || !config.WSServerPort) {
     console.error(chalk.red('Config error: Missing one of TSServer, WSServerIP or WSServerPort'));
     return;
   }
@@ -96,7 +96,7 @@ async function main() {
     }
 
     try {
-      await axios.get(`http://${WSServerIP}:${config.WSServerPort}`);
+      await axios.get(`http://${config.WSServerIP}:${config.WSServerPort}`);
     } catch {
       configError = true;
       console.error(chalk.red('Config error: WS server not reachable.'));
@@ -217,7 +217,7 @@ async function main() {
       try {
         await axios.post(config.masterServer.registerUrl, {
           ip: socket.clientIp,
-          server: { tsServer: config.TSServer, ip: WSServerIP, port: config.WSServerPort },
+          server: { tsServer: config.TSServer, ip: config.WSServerIP, port: config.WSServerPort },
         });
       } catch (e) {
         console.error(e);
@@ -302,7 +302,7 @@ async function masterHeartbeat() {
   try {
     await axios.post(config.masterServer.heartbeatUrl, {
       tsServer: config.TSServer,
-      WSServerIP,
+      WSServerIP : config.WSServerIP,
       WSServerPort: config.WSServerPort,
     });
     console.log(chalk.green("Heartbeat sent"));
