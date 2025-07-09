@@ -277,116 +277,103 @@ function clientProcessing()
 		localPos = GetPedBoneCoords(targetPed, HeadBone)
 	end
 
-	for i=1, #playerList do
+	-- Process players in playerList
+	for i = 1, #playerList do
 		local player = playerList[i]
 		local playerServerId = GetPlayerServerId(player)
 		local playerPed = GetPlayerPed(player)
 
 		local playerTalking = getPlayerData(playerServerId, "voip:talking")
-        local playerRoutingBucket = getPlayerData(playerServerId, "voip:routingBucket") 
+		local playerRoutingBucket = getPlayerData(playerServerId, "voip:routingBucket") 
 
 		if GetConvar("gametype") == "gta5" then
 			setPlayerTalkingState(player, playerServerId)
 		end
 
-		if voip.serverId == playerServerId or not playerPed or not playerTalking or playerTalking == 0 then
-			goto continue
-		end
-
-		do
+		-- Skip this player if any of the conditions are true (equivalent to original goto continue)
+		if voip.serverId ~= playerServerId and playerPed and playerTalking and playerTalking ~= 0 then
 			local playerPos = GetPedBoneCoords(playerPed, HeadBone)
 			local dist = #(localPos - playerPos)
-			if Config.distance[4] then
-				if dist > voip.distance[4] then
-					goto continue
+
+			local tooFar = (Config.distance[4] and dist > voip.distance[4]) or (not Config.distance[4] and dist > voip.distance[3])
+
+			if not tooFar then
+				if not getPlayerData(playerServerId, "voip:mode") then
+					setPlayerData(playerServerId, "voip:mode", 1)
 				end
-			else
-				if dist > voip.distance[3] then
-					goto continue
+
+				local mode = tonumber(getPlayerData(playerServerId, "voip:mode"))
+				if Config.distance[4] then
+					if not mode or (mode ~= 1 and mode ~= 2 and mode ~= 3) then mode = 1 end
+				else
+					if not mode or (mode ~= 1 and mode ~= 2) then mode = 1 end
 				end
-			end
 
-			if not getPlayerData(playerServerId, "voip:mode") then
-				setPlayerData(playerServerId, "voip:mode", 1)
-			end
+				local volume = -30 + (30 - dist / voip.distance[mode] * 30)
+				if volume >= 0 then volume = 0 end
 
-			--	Process the volume for proximity voip
-			local mode = tonumber(getPlayerData(playerServerId, "voip:mode"))
-			if Config.distance[4] then
-				if (not mode or (mode ~= 1 and mode ~= 2 and mode ~= 3)) then mode = 1 end
-			else
-				if (not mode or (mode ~= 1 and mode ~= 2)) then mode = 1 end
-			end
-			local volume = -30 + (30 - dist / voip.distance[mode] * 30)
-			if volume >= 0 then
-				volume = 0
-			end
- 
-			local angleToTarget = localHeading - math.atan(playerPos.y - localPos.y, playerPos.x - localPos.x)
+				local angleToTarget = localHeading - math.atan(playerPos.y - localPos.y, playerPos.x - localPos.x)
 
-			-- Set player's position
-			local userData = {
-				uuid = getPlayerData(playerServerId, "voip:pluginUUID"),
-				volume = volume,
-				muted = 1,
-				radioEffect = false,
-				posX = voip.plugin_data.enableStereoAudio and math.cos(angleToTarget) * dist or 0,
-				posY = voip.plugin_data.enableStereoAudio and math.sin(angleToTarget) * dist or 0,
-				posZ = voip.plugin_data.enableStereoAudio and playerPos.z or 0
-			}
+				local userData = {
+					uuid = getPlayerData(playerServerId, "voip:pluginUUID"),
+					volume = volume,
+					muted = 1,
+					radioEffect = false,
+					posX = voip.plugin_data.enableStereoAudio and math.cos(angleToTarget) * dist or 0,
+					posY = voip.plugin_data.enableStereoAudio and math.sin(angleToTarget) * dist or 0,
+					posZ = voip.plugin_data.enableStereoAudio and playerPos.z or 0
+				}
 
-			-- Process proximity
-			if dist >= voip.distance[mode] then
-				userData.muted = 1
-			else
-				userData.volume = volume
-				userData.muted = 0
+				if dist >= voip.distance[mode] then
+					userData.muted = 1
+				else
+					userData.volume = volume
+					userData.muted = 0
+				end
+
+				usersdata[#usersdata + 1] = userData
 			end
-
-			usersdata[#usersdata + 1] = userData
 		end
-
-		::continue::
 	end
 
-	-- Process channels
+	-- Process channels without using goto
 	for _, channel in pairs(voip.myChannels) do
 		for _, subscriber in pairs(channel.subscribers) do
-			if (subscriber == voip.serverId) then goto channelContinue end
+			if subscriber ~= voip.serverId then
+				local remotePlayerUsingRadio = getPlayerData(subscriber, "radio:talking")
+				local remotePlayerChannel = getPlayerData(subscriber, "radio:channel")
 
-			local remotePlayerUsingRadio = getPlayerData(subscriber, "radio:talking")
-			local remotePlayerChannel = getPlayerData(subscriber, "radio:channel")
+				if remotePlayerUsingRadio and remotePlayerChannel == channel.id then
+					local remotePlayerUuid = getPlayerData(subscriber, "voip:pluginUUID")
 
-			if not remotePlayerUsingRadio or remotePlayerChannel ~= channel.id then 
-				goto channelContinue
-			end
+					local userData = {
+						uuid = remotePlayerUuid,
+						radioEffect = false,
+						muted = false,
+						volume = radioVolume,
+						posX = 0,
+						posY = 0,
+						posZ = voip.plugin_data.enableStereoAudio and localPos.z or 0
+					}
 
-			local remotePlayerUuid = getPlayerData(subscriber, "voip:pluginUUID")
+					if (type(remotePlayerChannel) == "number" and remotePlayerChannel <= voip.config.radioClickMaxChannel) or channel.radio then
+						userData.radioEffect = true
+					end
 
-			local userData = {
-				uuid = remotePlayerUuid,
-				radioEffect = false,
-				muted = false,
-				volume = radioVolume,
-				posX = 0,
-				posY = 0,
-				posZ = voip.plugin_data.enableStereoAudio and localPos.z or 0
-			}
+					local found = false
+					for k, v in pairs(usersdata) do
+						if v.uuid == remotePlayerUuid then
+							usersdata[k] = userData
+							found = true
+							break
+						end
+					end
 
-			if ((type(remotePlayerChannel) == "number" and remotePlayerChannel <= voip.config.radioClickMaxChannel) or channel.radio) then
-				userData.radioEffect = true
-			end
-
-			for k, v in pairs(usersdata) do
-				if v.uuid == remotePlayerUuid then
-					usersdata[k] = userData
-					goto channelContinue
+					if not found then
+						usersdata[#usersdata + 1] = userData
+					end
 				end
 			end
-
-			usersdata[#usersdata + 1] = userData
-
-			::channelContinue::
 		end
 	end
 
