@@ -12,9 +12,6 @@ Config.enableDebug            = false   -- Enable/disable TokoVoIP debug (Shift+
 Config.update                 = true    -- Enable/disable version check
 
 Config.UseOXlib								= false
--- true: Use ox_libs Version Check - false: Use the default Version Check
--- if true: uncomment line 19 and 32 in the fxmanifest.lua
-
 -- Voice Distances (in GTA distance units)
 Config.distance = {
     2,  -- Whisper
@@ -40,7 +37,7 @@ Config.radioEnabled           = true   -- Enable/disable radio usage
 
 -- WebSocket Server
 
-Config.wsServer               = "127.0.0.1:33250" -- Only change if your ws_server is external. WS server IP and port
+Config.wsServer               = "XxX.XxX.XxX.XxX:XXXXX" -- WS server IP and port (IPv4 or IPv6)
 Config.displayWSInfo          = true   -- Show WebSocket info on blocking screen
 Config.enableBlockingScreen   = true  -- Enable/disable black background blocking screen
 

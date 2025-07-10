@@ -12,6 +12,19 @@
 -- Defining Things
 local playersData = {}
 local channels = Config.channels
+
+math.randomseed(os.time())
+
+function randomString(length)
+    local charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local result = {}
+    for i = 1, length do
+        local randIndex = math.random(1, #charset)
+        result[i] = charset:sub(randIndex, randIndex)
+    end
+    return table.concat(result)
+end
+
 local serverId = randomString(32)
 
 SetConvarReplicated("gametype", GetConvar("GameName", "gta5"))
@@ -133,30 +146,27 @@ AddEventHandler("onResourceStart", function(resource)
 	end
 
     local header = [[
-	^5╔════════════════════════════════════════════════════════╗
-	^5║ ^1TokoVoIP V2 ^7by ^3Itokoyamato^7, ^4Neon^7, and ^1Plactrix              ^5║
-	^5║        ^8High-Quality TeamSpeak VoIP Integration         ^5║
-	^5╚════════════════════════════════════════════════════════╝
-	]]
+^5╔══════════════════════════════════════════════════════════════╗
+^5║ ^1TokoVoIP ^7by ^3Itokoyamato^7, ^4Neon^7, ^1Plactrix and ^9PinguinPocalypse ^5║
+^5╚══════════════════════════════════════════════════════════════╝ ]]
 
 	local info = [[
-	^5╔════════════════════════════════════════════════════════╗
-	^5║ %s
-	^5║ %s
-	^5╚════════════════════════════════════════════════════════╝
-	]]
+^5╔═══════════════════════════════════════════╗
+^5║ %s
+^5║ %s
+^5╚═══════════════════════════════════════════╝ ]]
 
-	local wsText  = "^5║ ^7- Checking WebSocket connection...               "
-	local ready   = "^5║ ^7- Initializing...                                "
+	local wsText  = "^7 Checking WebSocket connection...         ^5║"
+	local ready   = "^7 Initializing...                          ^5║"
 	
 	print(info:format(wsText, ready))
     
 	local wsCheckDone = false
     PerformHttpRequest(Config.wsServer, function(code)
         if code == 200 then
-            wsText = "^5║ ^2- Connected to WebSocket Server.                  "
+            wsText = "^2 Connected to WebSocket Server.           ^5║"
         else
-            wsText = "^5║ ^1- Failed to connect to WebSocket Server.         "
+            wsText = "^1 Failed to connect to WebSocket Server.   ^5║"
         end
         wsCheckDone = true
     end, "GET")
@@ -164,9 +174,9 @@ AddEventHandler("onResourceStart", function(resource)
 	while not wsCheckDone do Wait(10) end
 
     if wsText:find("Connected") then
-        ready = "^5║ ^2- TokoVoIP is ready to use.                      "
+        ready = "^2 TokoVoIP is ready to use.                ^5║"
     else
-        ready = "^5║ ^1- TokoVoIP is NOT ready.                        "
+        ready = "^1 TokoVoIP cannot be used.                 ^5║"
     end
 
     Wait(250) -- slight delay for nicer output
