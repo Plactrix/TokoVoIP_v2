@@ -11,7 +11,6 @@ Config.minVersion             = "1.0.0" -- Required TS plugin version
 Config.enableDebug            = false   -- Enable/disable TokoVoIP debug (Shift+9)
 Config.update                 = true    -- Enable/disable version check
 
-Config.UseOXlib								= false
 -- Voice Distances (in GTA distance units)
 Config.distance = {
     2,  -- Whisper
@@ -37,7 +36,7 @@ Config.radioEnabled           = true   -- Enable/disable radio usage
 
 -- WebSocket Server
 
-Config.wsServer               = "XxX.XxX.XxX.XxX:XXXXX" -- WS server IP and port (IPv4 or IPv6)
+Config.wsServer               = "XxX.XxX.XxX.XxX:XXXXX" -- WS server IP and port (IPv6 IPs need to be formatted like this: [IPv6]:Port)
 Config.displayWSInfo          = true   -- Show WebSocket info on blocking screen
 Config.enableBlockingScreen   = true  -- Enable/disable black background blocking screen
 
