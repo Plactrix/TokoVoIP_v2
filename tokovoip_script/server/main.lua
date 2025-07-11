@@ -1,6 +1,30 @@
+--[[ 
+   _____     _      __     __   ___ ____   __     ______      
+  |_   _|__ | | ____\ \   / /__|_ _|  _ \  \ \   / /___ \     
+	| |/ _ \| |/ / _ \ \ / / _ \| || |_) |  \ \ / /  __) |    
+    | | (_) |   < (_) \ V / (_) | ||  __/    \ V /  / __/     
+	|_|\___/|_|\_\___/ \_/ \___/___|_|        \_/  |_____|    
+													
+	   By Itokoyamato, Plactrix, Neon and PinguinPocalypse                        
+	______________________________________________________
+]]
+
 -- Defining Things
 local playersData = {}
 local channels = Config.channels
+
+math.randomseed(os.time())
+
+function randomString(length)
+    local charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+    local result = {}
+    for i = 1, length do
+        local randIndex = math.random(1, #charset)
+        result[i] = charset:sub(randIndex, randIndex)
+    end
+    return table.concat(result)
+end
+
 local serverId = randomString(32)
 
 SetConvarReplicated("gametype", GetConvar("GameName", "gta5"))
@@ -115,74 +139,49 @@ AddEventHandler("playerDropped", function()
 end)
 
 AddEventHandler("onResourceStart", function(resource)
-	if resource ~= GetCurrentResourceName() then
-		return
-	end
+	if resource ~= GetCurrentResourceName() then return end
 
 	for index, player in pairs(GetPlayers()) do
 		updateRoutingBucket(player, 0)
 	end
 
-	local vText = nil
-	local wsText = nil
-	local ReadyToUseText = nil
-	local base = [[
-   ^5_____________________________________________________________
-  ^5| ^8 _____     _      __     __   ___ ____   __     ______      ^5|
-  ^5| ^8|_   _|__ | | ____\ \   / /__|_ _|  _ \  \ \   / /___ \     ^5|
-  ^5|   ^8| |/ _ \| |/ / _ \ \ / / _ \| || |_) |  \ \ / /  __) |    ^5|
-  ^5|   ^8| | (_) |   < (_) \ V / (_) | ||  __/    \ V /  / __/     ^5|
-  ^5|   ^8|_|\___/|_|\_\___/ \_/ \___/___|_|        \_/  |_____|    ^5|
-  ^5|                                                             ^5|
-  ^5|   ^7By ^3Itokoyamato^7, ^1Plactrix ^7and ^4Neon                         ^5|
-  ^5|_____________________________________________________________^5|
-    ]]
+    local header = [[
+^5╔══════════════════════════════════════════════════════════════╗
+^5║ ^1TokoVoIP ^7by ^3Itokoyamato^7, ^4Neon^7, ^1Plactrix and ^9PinguinPocalypse ^5║
+^5╚══════════════════════════════════════════════════════════════╝ ]]
+
 	local info = [[
-   ^5_____________________________________________________________
-  ^5| ^1TokoVoIP V2^7: Starting up                                    ^5|
-	 %s
-	 %s
-	 %s
-	 ^5|_____________________________________________________________|^7    
-	]]
+^5╔═══════════════════════════════════════════╗
+^5║ %s
+^5║ %s
+^5╚═══════════════════════════════════════════╝ ]]
 
-	Wait(1000)
+	local wsText  = "^7 Checking WebSocket connection...         ^5║"
+	local ready   = "^7 Initializing...                          ^5║"
+	
+	print(info:format(wsText, ready))
+    
+	local wsCheckDone = false
+    PerformHttpRequest(Config.wsServer, function(code)
+        if code == 200 then
+            wsText = "^2 Connected to WebSocket Server.           ^5║"
+        else
+            wsText = "^1 Failed to connect to WebSocket Server.   ^5║"
+        end
+        wsCheckDone = true
+    end, "GET")
+	
+	while not wsCheckDone do Wait(10) end
 
-	PerformHttpRequest("https://raw.githubusercontent.com/Plactrix/versions/main/tokovoip.json", function(code, res, _)
-		if code == 200 then
-			local data = json.decode(res)
-            if data["version"] ~= GetResourceMetadata(GetCurrentResourceName(), "version") then
-				vText = "^5| ^7- ^1TokoVoIP is outdated! Version " .. data["version"] .. " is now available.     ^5|"
-			elseif data["version"] == GetResourceMetadata(GetCurrentResourceName(), "version") then
-				vText = "^5| ^7- TokoVoIP is ^2up-to-date^7!                                   ^5|"
-			end
-		end
-	end, "GET")
+    if wsText:find("Connected") then
+        ready = "^2 TokoVoIP is ready to use.                ^5║"
+    else
+        ready = "^1 TokoVoIP cannot be used.                 ^5║"
+    end
 
-	PerformHttpRequest(Config.wsServer, function(code, _, _)
-		if code == 200 then
-			wsText = "^5| ^7- ^2Connected ^7to WebSocket Server!                            ^5|"
-		else
-			wsText = "^5| ^7- ^1Unable to connect to WebSocket Server!                    ^5|"
-		end
-	end, "GET")
-
-	while vText == nil do
-		Wait(5)
-	end
-
-	while wsText == nil do
-		Wait(5)
-	end
-
-	if not string.find(wsText, "Unable") then
-		ReadyToUseText = "^5| ^7- ^2TokoVoIP is ready for use!                                ^5|"
-	else
-		ReadyToUseText = "^5| ^7- ^1TokoVoIP is NOT ready for use                             ^5|"
-	end
-
-	print(base)
-	print(info:format(vText, wsText, ReadyToUseText))
+    Wait(250) -- slight delay for nicer output
+    print(header)
+    print(info:format(wsText, ready))
 end)
 
 -- Functions
