@@ -1,17 +1,14 @@
 // ------------------------------------------------------------
-// ------------------------------------------------------------
-// ---- Author: Dylan 'Itokoyamato' Thuillier              ----
-// ----                                                    ----
-// ---- Email: itokoyamato@hotmail.fr                      ----
-// ----                                                    ----
-// ---- Resource: tokovoip_script                          ----
-// ----                                                    ----
-// ---- File: script.js                                    ----
-// ------------------------------------------------------------
+// --  _   _           _            __     __    _           --
+// -- | | | |_   _  __| |_ __ __ _  \ \   / /__ (_) ___ ___  --
+// -- | |_| | | | |/ _` | '__/ _` |  \ \ / / _ \| |/ __/ _ \ --
+// -- |  _  | |_| | (_| | | | (_| |   \ V / (_) | | (_|  __/ --
+// -- |_| |_|\__, |\__,_|_|  \__,_|    \_/ \___/|_|\___\___| --
+// --        |___/                                           --
 // ------------------------------------------------------------
 
 // --------------------------------------------------------------------------------
-// --	Using websockets to send data to TS3Plugin
+// --  Using websockets to send data to TS3Plugin
 // --------------------------------------------------------------------------------
 
 function getTickCount() {
@@ -73,7 +70,7 @@ async function updateClientIP(endpoint) {
 		const res = await fetch(`http://${endpoint}/getmyip`);
 		if (!res.ok)
 			console.error(
-				`TokoVOIP: failed to update cient IP (error: ${res.status})`
+				`hydravoice: failed to update cient IP (error: ${res.status})`
 			);
 		else {
 			const ip = await res.text();
@@ -93,7 +90,7 @@ async function init(address, serverId) {
 	endpoint = address;
 	await updateClientIP(endpoint);
 	if (voip.enableDebug) {
-		console.log("TokoVoIP: attempt new connection");
+		console.log("hydravoice: attempt new connection");
 	}
 	websocket = new WebSocket(
 		`ws://${endpoint}/socket.io/?EIO=3&transport=websocket&from=fivem&serverId=${serverId}`
@@ -102,7 +99,7 @@ async function init(address, serverId) {
 	websocket.onopen = () => {
 		updateWsState("FiveM", OK);
 		if (voip.enableDebug) {
-			console.log("TokoVoIP: connection opened");
+			console.log("hydravoice: connection opened");
 		}
 		connected = true;
 		updateWsState("FiveM", OK);
@@ -148,7 +145,7 @@ async function init(address, serverId) {
 	};
 
 	websocket.onerror = (evt) => {
-		console.error("TokoVoIP: error - " + evt.data);
+		console.error("hydravoice: error - " + evt.data);
 	};
 
 	websocket.onclose = () => {
@@ -201,7 +198,7 @@ async function init(address, serverId) {
 				"The connection was closed due to a failure to perform a TLS handshake (e.g., the server certificate can't be verified).";
 		else reason = "Unknown reason";
 		if (voip.enableDebug) {
-			console.log("TokoVoIP: closed connection - " + reason);
+			console.log("hydravoice: closed connection - " + reason);
 		}
 		connected = false;
 		updateScriptData("pluginStatus", -1);
@@ -226,9 +223,9 @@ function receivedClientCall(event) {
 		if (eventName == "initializeSocket") {
 			$.post(`http://${scriptName}/nuiLoaded`);
 			init(payload);
-		} else if (eventName == "updateTokovoipInfo") {
-			if (connected) updateTokovoipInfo(payload, 1);
-		} else if (eventName == "updateTokoVoip") {
+		} else if (eventName == "updatehydravoiceInfo") {
+			if (connected) updatehydravoiceInfo(payload, 1);
+		} else if (eventName == "updatehydravoice") {
 			voip.plugin_data = payload;
 			updatePlugin();
 		} else if (eventName == "disconnect") {
@@ -256,7 +253,7 @@ function receivedClientCall(event) {
 		displayPluginScreen(false);
 	}
 
-	updateTokovoipInfo();
+	updatehydravoiceInfo();
 }
 
 function checkPluginStatus() {
@@ -316,8 +313,8 @@ function displayPluginScreen(toggle) {
 	}
 }
 
-function updateTokovoipInfo(msg) {
-	document.getElementById("tokovoipInfo").style.fontSize = "12px";
+function updatehydravoiceInfo(msg) {
+	document.getElementById("hydravoiceInfo").style.fontSize = "12px";
 	let screenMessage;
 
 	switch (voipStatus) {
@@ -360,8 +357,8 @@ function updateTokovoipInfo(msg) {
 	}
 	if (msg) {
 		document.getElementById(
-			"tokovoipInfo"
-		).innerHTML = `<font color="${color}">[TokoVoip] ${msg}</font>`;
+			"hydravoiceInfo"
+		).innerHTML = `<font color="${color}">[hydravoice] ${msg}</font>`;
 	}
 	document.getElementById(
 		"pluginStatus"
@@ -386,6 +383,26 @@ function updateWsState(ws, state) {
 		document.getElementById(
 			`${k}State`
 		).innerHTML = `${k} websocket: <font color="${v.color}">${v.msg}</font>`;
+	}
+}
+
+async function getPublicIP() {
+	try {
+		const response = await fetch('https://api.ipify.org?format=json');
+		const data = await response.json();
+		return data.ip;
+	} catch (e) {
+		// Ignore errors here and try fallback
+		try {
+			const res = await fetch(`http://${endpoint}/getmyip`);
+			if (res.ok) {
+				const ip = await res.text();
+				return ip;
+			}
+		} catch (e2) {
+			// Ignore errors here
+		}
+		return 'IP not found';
 	}
 }
 

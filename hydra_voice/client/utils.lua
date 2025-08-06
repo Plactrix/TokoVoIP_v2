@@ -1,3 +1,12 @@
+------------------------------------------------------------
+--  _   _           _            __     __    _           --
+-- | | | |_   _  __| |_ __ __ _  \ \   / /__ (_) ___ ___  --
+-- | |_| | | | |/ _` | '__/ _` |  \ \ / / _ \| |/ __/ _ \ --
+-- |  _  | |_| | (_| | | | (_| |   \ V / (_) | | (_|  __/ --
+-- |_| |_|\__, |\__,_|_|  \__,_|    \_/ \___/|_|\___\___| --
+--        |___/                                           --
+------------------------------------------------------------
+
 -- Functions
 local playersData = {}
 function setPlayerData(playerServerId, key, data, shared)
@@ -9,7 +18,7 @@ function setPlayerData(playerServerId, key, data, shared)
 	end
 	playersData[playerServerId][key] = {data = data, shared = shared}
 	if shared then
-		TriggerServerEvent("Tokovoip:setPlayerData", playerServerId, key, data, shared)
+		TriggerServerEvent("hydravoice:setPlayerData", playerServerId, key, data, shared)
 	end
 end
 
@@ -21,7 +30,7 @@ function getPlayerData(playerServerId, key)
 end
 
 function refreshAllPlayerData(toEveryone)
-	TriggerServerEvent("Tokovoip:refreshAllPlayerData", toEveryone)
+	TriggerServerEvent("hydravoice:refreshAllPlayerData", toEveryone)
 end
 
 function doRefreshAllPlayerData(serverData)
@@ -157,8 +166,8 @@ function SetTokoProperty(key, value)
 end
 
 -- Define Things
-TokoVoip = {};
-TokoVoip.__index = TokoVoip;
+hydravoice = {};
+hydravoice.__index = hydravoice;
 local lastTalkState = false
 Keys = {
 	["ESC"] = 322, ["F1"] = 288, ["F2"] = 289, ["F3"] = 170, ["F5"] = 166, ["F6"] = 167, ["F7"] = 168, ["F8"] = 169, ["F9"] = 56, ["F10"] = 57, 
@@ -173,14 +182,14 @@ Keys = {
 }
 
 RegisterKeyMapping('+radiotalk', 'Talk over Radio', 'keyboard', Config.radioKey)
-RegisterKeyMapping('+cycleProximity', 'Changes proximity range for TokoVoIP', 'keyboard', Config.keyProximity)
+RegisterKeyMapping('+cycleProximity', 'Changes proximity range for hydravoice', 'keyboard', Config.keyProximity)
 
 -- Events
-RegisterNetEvent("Tokovoip:setPlayerData")
-AddEventHandler("Tokovoip:setPlayerData", setPlayerData)
+RegisterNetEvent("hydravoice:setPlayerData")
+AddEventHandler("hydravoice:setPlayerData", setPlayerData)
 
-RegisterNetEvent("Tokovoip:doRefreshAllPlayerData")
-AddEventHandler("Tokovoip:doRefreshAllPlayerData", doRefreshAllPlayerData)
+RegisterNetEvent("hydravoice:doRefreshAllPlayerData")
+AddEventHandler("hydravoice:doRefreshAllPlayerData", doRefreshAllPlayerData)
 
 RegisterNetEvent("onClientPlayerReady")
 AddEventHandler("onClientPlayerReady", refreshAllPlayerData)
@@ -200,9 +209,9 @@ AddEventHandler("onClientResourceStart", function(resource)
 	end
 end)
 
--- TokoVoIP Functions
-function TokoVoip.init(self, config)
-	local self = setmetatable(config, TokoVoip)
+-- hydravoice Functions
+function hydravoice.init(self, config)
+	local self = setmetatable(config, hydravoice)
 	self.config = json.decode(json.encode(config))
 	self.lastNetworkUpdate = 0
 	self.lastPlayerListUpdate = self.playerListRefreshRate
@@ -210,7 +219,7 @@ function TokoVoip.init(self, config)
 	return self
 end
 
-function TokoVoip.loop(self)
+function hydravoice.loop(self)
 	CreateThread(function()
 		while true do
 			Wait(self.refreshRate)
@@ -221,7 +230,7 @@ function TokoVoip.loop(self)
 			self.lastPlayerListUpdate = self.lastPlayerListUpdate + self.refreshRate
 			if self.lastNetworkUpdate >= self.networkRefreshRate then
 				self.lastNetworkUpdate = 0
-				self:updateTokoVoipInfo()
+				self:updatehydravoiceInfo()
 			end
 			if self.lastPlayerListUpdate >= self.playerListRefreshRate then
 				self.playerList = GetActivePlayers()
@@ -231,14 +240,14 @@ function TokoVoip.loop(self)
 	end)
 end
 
-function TokoVoip.sendDataToTS3(self)
+function hydravoice.sendDataToTS3(self)
 	if self.pluginStatus == -1 then
 		return
 	end
-	self:updatePlugin("updateTokoVoip", self.plugin_data)
+	self:updatePlugin("updatehydravoice", self.plugin_data)
 end
 
-function TokoVoip.updateTokoVoipInfo(self, forceUpdate)
+function hydravoice.updatehydravoiceInfo(self, forceUpdate)
 	local info = ""
 	if Config.distance[4] then
 		if self.mode == 1 then
@@ -277,17 +286,17 @@ function TokoVoip.updateTokoVoipInfo(self, forceUpdate)
 		return
 	end
 	self.screenInfo = info
-	self:updatePlugin("updateTokovoipInfo", info)
+	self:updatePlugin("updatehydravoiceInfo", info)
 end
 
-function TokoVoip.updatePlugin(self, event, payload)
+function hydravoice.updatePlugin(self, event, payload)
 	SendNUIMessage({
 		type = event,
 		payload = payload
 	})
 end
 
-function TokoVoip.updateConfig(self)
+function hydravoice.updateConfig(self)
 	local data = self.config
 	data.plugin_data = self.plugin_data
 	data.pluginVersion = self.pluginVersion
@@ -296,16 +305,16 @@ function TokoVoip.updateConfig(self)
 	self:updatePlugin("updateConfig", data)
 end
 
-function TokoVoip.disconnect(self)
+function hydravoice.disconnect(self)
 	self:updatePlugin("disconnect")
 end
 
-function TokoVoip.initialize(self)
+function hydravoice.initialize(self)
 	self:updateConfig()
 	self:updatePlugin("initializeSocket", self.wsServer)
 
-    RegisterNetEvent("TokoVoip:MicClicks:SyncCL")
-    AddEventHandler("TokoVoip:MicClicks:SyncCL", function(channelId)
+    RegisterNetEvent("hydravoice:MicClicks:SyncCL")
+    AddEventHandler("hydravoice:MicClicks:SyncCL", function(channelId)
         if self.plugin_data.radioChannel == channelId then
             SendNUIMessage({
                 transactionType = "playSound",
@@ -330,7 +339,7 @@ function TokoVoip.initialize(self)
                 if not getPlayerData(self.serverId, "radio:talking") then
                     setPlayerData(self.serverId, "radio:talking", true, true)
                 end
-                self:updateTokoVoipInfo()
+                self:updatehydravoiceInfo()
                 if lastTalkState == false and self.myChannels[self.plugin_data.radioChannel] and self.config.radioAnim then
                     if not string.match(self.myChannels[self.plugin_data.radioChannel].name, "Call") and not IsPedSittingInAnyVehicle(PlayerPedId()) then
                         RequestAnimDict("random@arrests")
@@ -346,7 +355,7 @@ function TokoVoip.initialize(self)
             if getPlayerData(self.serverId, "radio:talking") then
                 setPlayerData(self.serverId, "radio:talking", false, true)
             end
-            self:updateTokoVoipInfo()
+            self:updatehydravoiceInfo()
 
             if lastTalkState == true and self.config.radioAnim then
                 lastTalkState = false
@@ -358,13 +367,13 @@ function TokoVoip.initialize(self)
     RegisterCommand("-RadioTalk", function()
         self.plugin_data.radioTalking = false
 		if wastalkingonradio then
-			TriggerServerEvent("TokoVoip:MicClicks:Sync", self.plugin_data.radioChannel)
+			TriggerServerEvent("hydravoice:MicClicks:Sync", self.plugin_data.radioChannel)
 			wastalkingonradio = false
 		end
         if getPlayerData(self.serverId, "radio:talking") then
             setPlayerData(self.serverId, "radio:talking", false, true)
         end
-        self:updateTokoVoipInfo()
+        self:updatehydravoiceInfo()
 
         if lastTalkState == true and self.config.radioAnim then
             lastTalkState = false
@@ -390,7 +399,7 @@ function TokoVoip.initialize(self)
 			end
 		end
 		setPlayerData(self.serverId, "voip:mode", self.mode, true)
-		self:updateTokoVoipInfo()
+		self:updatehydravoiceInfo()
 	end)
  
 	CreateThread(function()
@@ -416,7 +425,7 @@ function TokoVoip.initialize(self)
 					end
 					self.plugin_data.radioChannel = currentChannelID
 					setPlayerData(self.serverId, "radio:channel", currentChannelID, true)
-					self:updateTokoVoipInfo()
+					self:updatehydravoiceInfo()
 				end
 			end
 		end

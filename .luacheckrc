@@ -1,0 +1,375 @@
+stds.cfx = {
+    globals = {
+        string = { other_fields = true }
+    },
+    read_globals = {
+        Citizen = {
+            fields = {
+                "Wait",
+                "Await",
+                "CreateThread",
+                "CreateThreadNow",
+                "SetTimeout",
+                "SetTickRoutine",
+                "SetEventRoutine",
+                "Trace",
+                "InvokeNative",
+                "PointerValueInt",
+                "PointerValueIntInitialized",
+                "PointerValueFloat",
+                "PointerValueFloatInitialized",
+                "PointerValueVector",
+                "ResultAsFloat",
+                "ResultAsInteger",
+                "ResultAsLong",
+                "ResultAsObject",
+                "ResultAsString",
+                "ResultAsVector",
+                "ReturnResultAnyway",
+                "CanonicalizeRef",
+                "SetCallRefRoutine",
+                "SetDeleteRefRoutine",
+                "SetDuplicateRefRoutine",
+                "GetFunctionReference",
+                "InvokeFunctionReference",
+                "GetConvar",
+                "RegisterCommand"
+            }
+        },
+        exports = { other_fields = true },
+        GlobalState = { other_fields = true },
+        "Player",
+        "Entity",
+        "Vehicle",
+        "Wait",
+        "CreateThread",
+        "SetTimeout",
+        "Await",
+        "Trace",
+        "quat",
+        "vector", "vec",
+        "vector2", "vec2",
+        "vector3", "vec3",
+        "vector4", "vec4",
+        "AddEventHandler",
+        "RegisterNetEvent",
+        "TriggerEvent",
+        "RemoveEventHandler",
+        json = { fields = { "encode", "decode", "array", "getoption", "isarray", "isobject", "null", "object", "setoption", "use_lpeg" } },
+        promise = { fields = { "new", "all", "first", "map" } },
+        table = { fields = { "create", "wipe", "clone", "type" } },
+        string = { fields = { "strjoin", "strtrim", "strconcat", "strsplit", "tostringall" } },
+        utf8 = { fields = { "strlenutf8", "strcmputf8i" } },
+        msgpack = { fields = { "extend", "extend_clear", "extend_get", "getoption", "gettype", "new", "next", "null", "pack", "pack_args", "safe", "sentinel", "packers", "set_array", "set_integer", "set_number", "set_string", "setoption", "settype", "unpack" } },
+        "scrub",
+        "mat",
+        "mat2",
+        "mat3",
+        "mat4",
+        "mat2x2",
+        "mat2x3",
+        "mat2x4",
+        "mat3x2",
+        "mat3x3",
+        "mat3x4",
+        "mat4x2",
+        "mat4x3",
+        "mat4x4",
+        "cross",
+        "defer",
+        "dot",
+        "each",
+        "inv",
+        "norm",
+        "slerp",
+        "quat",
+        "qua",
+        "joaat",
+        "source",
+        "RegisterCommand",
+        "%%SHARED_GLOBALS%%"
+    }
+}
+
+stds.cfx_sv = {
+    globals = { "GlobalState" },
+    read_globals = {
+        "TriggerClientEvent",
+        "TriggerLatentClientEvent",
+        "RegisterServerEvent",
+        "GetPlayerIdentifiers",
+        "GetPlayers",
+        "GetPlayerTokens",
+        "PerformHttpRequest",
+        "CreateVehicle",
+        "CreateVehicleServerSetter",
+        "%%SERVER_GLOBALS%%"
+    }
+}
+
+stds.cfx_cl_deprecated = {
+    read_globals = {
+        "World3dToScreen2d"
+    }
+}
+
+stds.cfx_cl = {
+    globals = {
+        LocalPlayer = {
+            fields = {
+                state = {
+                    other_fields = true,
+                    fields = {
+                        "set",
+                        "isLoggedIn",
+                    }
+                }
+            }
+        }
+    },
+    read_globals = {
+        "TriggerServerEvent",
+        "TriggerLatentServerEvent",
+        "RegisterNUICallback",
+        "SendNUIMessage",
+        "GlobalState",
+        "SetTimecycleModifier",
+        "GetCurrentResourceName",
+        "SetNuiFocus",
+        "%%CLIENT_GLOBALS%%"
+    }
+}
+
+stds.cfx_manifest = {
+    read_globals = {
+        "author", "description", "repository", "version",
+        "rdr3_warning", "fx_version",
+        "games", "game", "authors", "author",
+        "server_scripts", "server_script",
+        "client_scripts", "client_script",
+        "shared_scripts", "shared_script",
+        "ui_page", "files", "file",
+        "export", "exports", "replace_level_meta",
+        "data_file", "this_is_a_map", "server_only",
+        "loadscreen", "dependency", "dependencies",
+        "provide", "lua54", "disable_lazy_natives",
+        "clr_disable_task_scheduler", "my_data",
+        "ui_page_preload", "loadscreen_manual_shutdown",
+    },
+}
+
+stds.esx = {
+    read_globals = {
+        "ESX",
+        "Locales",
+        "_",
+        "_U",
+        "Translate",
+        "TranslateCap"
+    }
+}
+
+stds.qbox = {
+    read_globals = {
+        "QBCore",
+        "QBX"
+    }
+}
+
+stds.qbox_playerdata = {
+    read_globals = {
+        "QBCore",
+        "QBX",
+        "PlayerData",
+        "OnPlayerData"
+    }
+}
+
+stds.qbox_lib = {
+    globals = {
+        qbx = {
+            fields = {
+                armsWithoutGloves = {
+                    fields = {
+                        "male",
+                        "female"
+                    }
+                },
+                string = {
+                    fields = {
+                        "trim",
+                        "capitalize"
+                    }
+                },
+                math = {
+                    fields = {
+                        "round"
+                    }
+                },
+                table = {
+                    fields = {
+                        "mapBySubfield",
+                        "size"
+                    }
+                },
+                "getVehiclePlate",
+                "generateRandomPlate",
+                "getCardinalDirection",
+                "spawnVehicle",
+                "drawText2d",
+                "drawText3d",
+                "getEntityAndNetIdFromBagName",
+                "entityStateHandler",
+                "deleteVehicle",
+                "getVehicleDisplayName",
+                "getVehicleMakeName",
+                "getVehicleModName",
+                "getVehicleLiveryName",
+                "getStreetName",
+                "getZoneName",
+                "setVehicleExtra",
+                "resetVehicleExtras",
+                "setVehicleExtras",
+                "isWearingGloves",
+                "loadAudioBank",
+                "playAudio"
+            }
+        }
+    }
+}
+
+stds.mysql = {
+    read_globals = {
+        MySQL = {
+            fields = {
+                "query",
+                "update",
+                "scalar",
+                "rawExecute",
+                "single",
+                "insert",
+                "transaction",
+                "prepare",
+                "ready",
+                Sync = {
+                    fields = {
+                        "prepare",
+                        "fetchScalar",
+                        "fetchSingle",
+                        "fetchAll",
+                        "transaction",
+                        "insert",
+                        "execute",
+                    }
+                },
+                Async = {
+                    fields = {
+                        "prepare",
+                        "fetchScalar",
+                        "fetchSingle",
+                        "fetchAll",
+                        "transaction",
+                        "insert",
+                        "execute",
+                    }
+                }
+            }
+        }
+    }
+}
+
+stds.polyzone = {
+    read_globals = {
+        "PolyZone",
+        "ComboZone",
+        "BoxZone",
+        "EntityZone",
+        "CircleZone"
+    }
+}
+
+stds.qblocales = {
+    read_globals = {
+        Locale = {
+            fields = {
+                "new",
+                "extend",
+                "clear",
+                "replace",
+                "locale",
+                "t",
+                "has",
+                "delete",
+            }
+        }
+    }
+}
+
+stds.qbgarages = {
+    read_globals = {
+        "Garages"
+    }
+}
+
+stds.qbapartments = {
+    read_globals = {
+        "Apartments"
+    }
+}
+
+stds.menuv = {
+    read_globals = {
+        MenuV = {
+            fields = {
+                "CreateMenu",
+                "OpenMenu",
+                "CloseMenu",
+                "T",
+                "InheritMenu",
+                "GetMenu",
+                "Refresh",
+                "CloseAll",
+                "AddControlKey",
+                "IsNamespaceAvailable"
+            }
+        }
+    }
+}
+
+stds.ox_lib = {
+    read_globals = {
+        "lib",
+        "cache",
+        "ClearInterval",
+        "SetInterval",
+        "locale",
+    }
+}
+
+-- manifest
+files["**/fxmanifest.lua"].std = "max+cfx_manifest"
+files["**/__resource.lua"].std = "max+cfx_manifest"
+files["**/fxmanifest.lua"].ignore = {'113', '611', '111', '614'}
+files["**/__resource.lua"].ignore = {'113', '611', '111', '614'}
+
+-- clients
+files["**/client.lua"].std = "max+cfx+cfx_cl_deprecated+cfx_cl+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+files["**/cl_*.lua"].std = "max+cfx+cfx_cl_deprecated+cfx_cl+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+files["**/client/**/*.lua"].std = "max+cfx+cfx_cl_deprecated+cfx_cl+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+
+-- server
+files["**/server.lua"].std = "max+cfx+cfx_sv+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+files["**/sv_*.lua"].std = "max+cfx+cfx_sv+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+files["**/server/**/*.lua"].std = "max+cfx+cfx_sv+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+
+-- shared
+files["**/shared.lua"].std = "max+cfx+cfx_sv+cfx_cl_deprecated+cfx_cl+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+files["**/shared/**/*.lua"].std = "max+cfx+cfx_sv+cfx_cl_deprecated+cfx_cl+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+
+-- default
+max_line_length = 1100
+max_cyclomatic_complexity = 200
+color = true
+ignore = {'611', '111', '614', '212'}
+std = "max+cfx+cfx_sv+cfx_cl_deprecated+cfx_cl+cfx_manifest+ox_lib+esx+qbox+qbox_playerdata+qbox_lib+mysql+polyzone+qblocales+qbgarages+qbapartments+menuv"
+operators = {"+=", "-=", "*=", "/="}

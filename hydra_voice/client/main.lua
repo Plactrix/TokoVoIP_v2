@@ -1,35 +1,44 @@
+------------------------------------------------------------
+--  _   _           _            __     __    _           --
+-- | | | |_   _  __| |_ __ __ _  \ \   / /__ (_) ___ ___  --
+-- | |_| | | | |/ _` | '__/ _` |  \ \ / / _ \| |/ __/ _ \ --
+-- |  _  | |_| | (_| | | | (_| |   \ V / (_) | | (_|  __/ --
+-- |_| |_|\__, |\__,_|_|  \__,_|    \_/ \___/|_|\___\___| --
+--        |___/                                           --
+------------------------------------------------------------
+
 -- Defining Things
 local targetPed
 local useLocalPed = true
 local isRunning = false
-local scriptVersion = "2.0.1"
 local animStates = {}
 local displayingPluginScreen = false
 local HeadBone = 0x796e
 local radioVolume = 0
 local nuiLoaded = false
+local CurrentID
+voip = voip or {}
 
 -- Commands
-RegisterCommand("tokovoiplatency", function()
+RegisterCommand("hydravoice:latency", function()
 	SendNUIMessage({
 		type = "toggleLatency"
 	})
 end)
 
 -- Events
-RegisterNetEvent("initializeVoip")
-AddEventHandler("initializeVoip", function()
+RegisterNetEvent('initializeVoip', function()
 	Wait(1000)
 	if isRunning then
-		return Citizen.Trace("TokoVoIP is already running\n")
+		return Citizen.Trace("hydra_voice is already running\n")
 	end
 	isRunning = true
 
-	while not TokoVoip do
+	while not hydravoice do
 		Wait(5)
 	end
 
-	voip = TokoVoip:init(Config)
+	voip = hydravoice:init(Config)
 	voip.plugin_data.Users = {}
 	voip.plugin_data.radioTalking = false
 	voip.plugin_data.radioChannel = 0
@@ -39,15 +48,15 @@ AddEventHandler("initializeVoip", function()
 	voip.pluginStatus = -1
 	voip.pluginVersion = "0"
 	voip.routingBucket = 0
-	voip.serverId = GetPlayerServerId(PlayerId())
+	CurrentID = GetPlayerServerId(PlayerId())
 	voip.myChannels = {}
-	setPlayerData(voip.serverId, "voip:mode", voip.mode, true)
-	setPlayerData(voip.serverId, "voip:talking", voip.talking, true)
-	setPlayerData(voip.serverId, "radio:channel", voip.plugin_data.radioChannel, true)
-	setPlayerData(voip.serverId, "radio:talking", voip.plugin_data.radioTalking, true)
-	setPlayerData(voip.serverId, "voip:pluginStatus", voip.pluginStatus, true)
-	setPlayerData(voip.serverId, "voip:pluginVersion", voip.pluginVersion, true)
-	setPlayerData(voip.serverId, "voip:routingBucket", voip.routingBucket, true)
+	setPlayerData(CurrentID, "voip:mode", voip.mode, true)
+	setPlayerData(CurrentID, "voip:talking", voip.talking, true)
+	setPlayerData(CurrentID, "radio:channel", voip.plugin_data.radioChannel, true)
+	setPlayerData(CurrentID, "radio:talking", voip.plugin_data.radioTalking, true)
+	setPlayerData(CurrentID, "voip:pluginStatus", voip.pluginStatus, true)
+	setPlayerData(CurrentID, "voip:pluginVersion", voip.pluginVersion, true)
+	setPlayerData(CurrentID, "voip:routingBucket", voip.routingBucket, true)
 	refreshAllPlayerData()
 	targetPed = PlayerPedId()
 
@@ -57,8 +66,6 @@ AddEventHandler("initializeVoip", function()
 	elseif GetConvar("gametype") == "rdr3" then
 		RequestAnimDict("face_human@gen_male@base")
 	end
-
-	Citizen.Trace("TokoVoIP: Initialized script (" .. scriptVersion .. ")\n")
 
 	if voip.config.enableDebug then
 		local debugData = false
@@ -100,15 +107,8 @@ AddEventHandler("initializeVoip", function()
 	end
 end)
 
-RegisterNetEvent("TokoVoip:addPlayerToRadio")
-AddEventHandler("TokoVoip:addPlayerToRadio", addPlayerToRadio)
-
-RegisterNetEvent("TokoVoip:removePlayerFromRadio")
-AddEventHandler("TokoVoip:removePlayerFromRadio", removePlayerFromRadio)
-
-RegisterNetEvent("TokoVoip:onPlayerLeaveChannel")
-AddEventHandler("TokoVoip:onPlayerLeaveChannel", function(channelId, playerServerId)
-	if playerServerId == voip.serverId and voip.myChannels[channelId] then
+RegisterNetEvent("hydravoice:onPlayerLeaveChannel", function(channelId, playerServerId)
+	if playerServerId == CurrentID and voip.myChannels[channelId] then
 		local previousChannel = voip.plugin_data.radioChannel
 		voip.myChannels[channelId] = nil
 		if voip.plugin_data.radioChannel == channelId then
@@ -123,36 +123,33 @@ AddEventHandler("TokoVoip:onPlayerLeaveChannel", function(channelId, playerServe
 		end
 
 		if previousChannel ~= voip.plugin_data.radioChannel then
-			setPlayerData(voip.serverId, "radio:channel", voip.plugin_data.radioChannel, true)
+			setPlayerData(CurrentID, "radio:channel", voip.plugin_data.radioChannel, true)
 		end
 	elseif (voip.myChannels[channelId]) then
 		voip.myChannels[channelId].subscribers[playerServerId] = nil
 	end
 end)
 
-RegisterNetEvent("TokoVoip:onPlayerJoinChannel")
-AddEventHandler("TokoVoip:onPlayerJoinChannel", function(channelId, playerServerId, channelData)
-	if playerServerId == voip.serverId and channelData then
+RegisterNetEvent("hydravoice:onPlayerJoinChannel", function(channelId, playerServerId, channelData)
+	if playerServerId == CurrentID and channelData then
 		local previousChannel = voip.plugin_data.radioChannel
 
 		voip.plugin_data.radioChannel = channelData.id
 		voip.myChannels[channelData.id] = channelData
 
 		if previousChannel ~= voip.plugin_data.radioChannel then
-			setPlayerData(voip.serverId, "radio:channel", voip.plugin_data.radioChannel, true)
+			setPlayerData(CurrentID, "radio:channel", voip.plugin_data.radioChannel, true)
 		end
 	elseif voip.myChannels[channelId] then
 		voip.myChannels[channelId].subscribers[playerServerId] = playerServerId
 	end
 end)
 
-RegisterNetEvent("TokoVoip:setRadioVolume")
-AddEventHandler("TokoVoip:setRadioVolume", setRadioVolume)
+RegisterNetEvent("hydravoice:setRadioVolume", setRadioVolume)
 
-RegisterNetEvent("TokoVoip:updateRoutingBucket")
-AddEventHandler("TokoVoip:updateRoutingBucket", function(routingBucket)
+RegisterNetEvent("hydravoice:updateRoutingBucket", function(routingBucket)
 	voip.routingBucket = routingBucket
-	setPlayerData(voip.serverId, "voip:routingBucket", voip.routingBucket, true)
+	setPlayerData(CurrentID, "voip:routingBucket", voip.routingBucket, true)
 end)
 
 -- Add Event Handlers
@@ -168,9 +165,9 @@ RegisterNUICallback("updatePluginData", function(data, cb)
 		return
 	end
 	voip[payload.key] = payload.data
-	setPlayerData(voip.serverId, "voip:" .. payload.key, voip[payload.key], true)
+	setPlayerData(CurrentID, "voip:" .. payload.key, voip[payload.key], true)
 	voip:updateConfig()
-	voip:updateTokoVoipInfo(true)
+	voip:updatehydravoiceInfo(true)
 	cb('ok')
 end)
 
@@ -178,14 +175,14 @@ RegisterNUICallback("setPlayerTalking", function(data, cb)
 	voip.talking = tonumber(data.state)
 
 	if voip.talking == 1 then
-		setPlayerData(voip.serverId, "voip:talking", 1, true)
+		setPlayerData(CurrentID, "voip:talking", 1, true)
 		if GetConvar("gametype") == "gta5" then
 			PlayFacialAnim(GetPlayerPed(PlayerId()), "mic_chatter", "mp_facial")
 		elseif GetConvar("gametype") == "rdr3" then
 			PlayRedMFacialAnimation(GetPlayerPed(PlayerId()), "face_human@gen_male@base", "mood_talking_normal")
 		end
 	else
-		setPlayerData(voip.serverId, "voip:talking", 0, true)
+		setPlayerData(CurrentID, "voip:talking", 0, true)
 		if GetConvar("gametype") == "gta5" then
 			PlayFacialAnim(PlayerPedId(), "mood_normal_1", "facials@gen_male@base")
 		elseif GetConvar("gametype") == "rdr3" then
@@ -206,10 +203,9 @@ CreateThread(function()
 		response = serverId or "N/A"
 	end
 
-	RegisterNetEvent("TokoVoip:onClientGetServerId")
-	AddEventHandler("TokoVoip:onClientGetServerId", handler)
+	RegisterNetEvent("hydravoice:onClientGetServerId", handler)
 
-	TriggerServerEvent("TokoVoip:getServerId")
+	TriggerServerEvent("hydravoice:getServerId")
         
 	while not response do
 		Wait(5)
@@ -220,7 +216,7 @@ CreateThread(function()
 	end
 
 	voip.fivemServerId = response
-	Citizen.Trace("TokoVoIP: FiveM Server ID is " .. voip.fivemServerId .. "\n")
+	Citizen.Trace("hydravoice: FiveM Server ID is " .. voip.fivemServerId .. "\n")
 	voip.processFunction = clientProcessing -- Link the processing function that will be looped
 	voip:initialize() -- Initialize the websocket and controls
 	while not nuiLoaded do
@@ -277,116 +273,103 @@ function clientProcessing()
 		localPos = GetPedBoneCoords(targetPed, HeadBone)
 	end
 
-	for i=1, #playerList do
+	-- Process players in playerList
+	for i = 1, #playerList do
 		local player = playerList[i]
 		local playerServerId = GetPlayerServerId(player)
 		local playerPed = GetPlayerPed(player)
 
 		local playerTalking = getPlayerData(playerServerId, "voip:talking")
-        local playerRoutingBucket = getPlayerData(playerServerId, "voip:routingBucket") 
+		local playerRoutingBucket = getPlayerData(playerServerId, "voip:routingBucket") 
 
 		if GetConvar("gametype") == "gta5" then
 			setPlayerTalkingState(player, playerServerId)
 		end
 
-		if voip.serverId == playerServerId or not playerPed or not playerTalking or playerTalking == 0 then
-			goto continue
-		end
-
-		do
+		-- Skip this player if any of the conditions are true (equivalent to original goto continue)
+		if CurrentID ~= playerServerId and playerPed and playerTalking and playerTalking ~= 0 then
 			local playerPos = GetPedBoneCoords(playerPed, HeadBone)
 			local dist = #(localPos - playerPos)
-			if Config.distance[4] then
-				if dist > voip.distance[4] then
-					goto continue
+
+			local tooFar = (Config.distance[4] and dist > voip.distance[4]) or (not Config.distance[4] and dist > voip.distance[3])
+
+			if not tooFar then
+				if not getPlayerData(playerServerId, "voip:mode") then
+					setPlayerData(playerServerId, "voip:mode", 1)
 				end
-			else
-				if dist > voip.distance[3] then
-					goto continue
+
+				local mode = tonumber(getPlayerData(playerServerId, "voip:mode"))
+				if Config.distance[4] then
+					if not mode or (mode ~= 1 and mode ~= 2 and mode ~= 3) then mode = 1 end
+				else
+					if not mode or (mode ~= 1 and mode ~= 2) then mode = 1 end
 				end
-			end
 
-			if not getPlayerData(playerServerId, "voip:mode") then
-				setPlayerData(playerServerId, "voip:mode", 1)
-			end
+				local volume = -30 + (30 - dist / voip.distance[mode] * 30)
+				if volume >= 0 then volume = 0 end
 
-			--	Process the volume for proximity voip
-			local mode = tonumber(getPlayerData(playerServerId, "voip:mode"))
-			if Config.distance[4] then
-				if (not mode or (mode ~= 1 and mode ~= 2 and mode ~= 3)) then mode = 1 end
-			else
-				if (not mode or (mode ~= 1 and mode ~= 2)) then mode = 1 end
-			end
-			local volume = -30 + (30 - dist / voip.distance[mode] * 30)
-			if volume >= 0 then
-				volume = 0
-			end
- 
-			local angleToTarget = localHeading - math.atan(playerPos.y - localPos.y, playerPos.x - localPos.x)
+				local angleToTarget = localHeading - math.atan(playerPos.y - localPos.y, playerPos.x - localPos.x)
 
-			-- Set player's position
-			local userData = {
-				uuid = getPlayerData(playerServerId, "voip:pluginUUID"),
-				volume = volume,
-				muted = 1,
-				radioEffect = false,
-				posX = voip.plugin_data.enableStereoAudio and math.cos(angleToTarget) * dist or 0,
-				posY = voip.plugin_data.enableStereoAudio and math.sin(angleToTarget) * dist or 0,
-				posZ = voip.plugin_data.enableStereoAudio and playerPos.z or 0
-			}
+				local userData = {
+					uuid = getPlayerData(playerServerId, "voip:pluginUUID"),
+					volume = volume,
+					muted = 1,
+					radioEffect = false,
+					posX = voip.plugin_data.enableStereoAudio and math.cos(angleToTarget) * dist or 0,
+					posY = voip.plugin_data.enableStereoAudio and math.sin(angleToTarget) * dist or 0,
+					posZ = voip.plugin_data.enableStereoAudio and playerPos.z or 0
+				}
 
-			-- Process proximity
-			if dist >= voip.distance[mode] then
-				userData.muted = 1
-			else
-				userData.volume = volume
-				userData.muted = 0
+				if dist >= voip.distance[mode] then
+					userData.muted = 1
+				else
+					userData.volume = volume
+					userData.muted = 0
+				end
+
+				usersdata[#usersdata + 1] = userData
 			end
-
-			usersdata[#usersdata + 1] = userData
 		end
-
-		::continue::
 	end
 
-	-- Process channels
+	-- Process channels without using goto
 	for _, channel in pairs(voip.myChannels) do
 		for _, subscriber in pairs(channel.subscribers) do
-			if (subscriber == voip.serverId) then goto channelContinue end
+			if subscriber ~= CurrentID then
+				local remotePlayerUsingRadio = getPlayerData(subscriber, "radio:talking")
+				local remotePlayerChannel = getPlayerData(subscriber, "radio:channel")
 
-			local remotePlayerUsingRadio = getPlayerData(subscriber, "radio:talking")
-			local remotePlayerChannel = getPlayerData(subscriber, "radio:channel")
+				if remotePlayerUsingRadio and remotePlayerChannel == channel.id then
+					local remotePlayerUuid = getPlayerData(subscriber, "voip:pluginUUID")
 
-			if not remotePlayerUsingRadio or remotePlayerChannel ~= channel.id then 
-				goto channelContinue
-			end
+					local userData = {
+						uuid = remotePlayerUuid,
+						radioEffect = false,
+						muted = false,
+						volume = radioVolume,
+						posX = 0,
+						posY = 0,
+						posZ = voip.plugin_data.enableStereoAudio and localPos.z or 0
+					}
 
-			local remotePlayerUuid = getPlayerData(subscriber, "voip:pluginUUID")
+					if (type(remotePlayerChannel) == "number" and remotePlayerChannel <= voip.config.radioClickMaxChannel) or channel.radio then
+						userData.radioEffect = true
+					end
 
-			local userData = {
-				uuid = remotePlayerUuid,
-				radioEffect = false,
-				muted = false,
-				volume = radioVolume,
-				posX = 0,
-				posY = 0,
-				posZ = voip.plugin_data.enableStereoAudio and localPos.z or 0
-			}
+					local found = false
+					for k, v in pairs(usersdata) do
+						if v.uuid == remotePlayerUuid then
+							usersdata[k] = userData
+							found = true
+							break
+						end
+					end
 
-			if ((type(remotePlayerChannel) == "number" and remotePlayerChannel <= voip.config.radioClickMaxChannel) or channel.radio) then
-				userData.radioEffect = true
-			end
-
-			for k, v in pairs(usersdata) do
-				if v.uuid == remotePlayerUuid then
-					usersdata[k] = userData
-					goto channelContinue
+					if not found then
+						usersdata[#usersdata + 1] = userData
+					end
 				end
 			end
-
-			usersdata[#usersdata + 1] = userData
-
-			::channelContinue::
 		end
 	end
 
@@ -396,28 +379,32 @@ function clientProcessing()
 	voip.plugin_data.posZ = voip.plugin_data.enableStereoAudio and localPos.z or 0
 end
 
+RegisterNetEvent("hydravoice:addPlayerToRadio", addPlayerToRadio)
+
+RegisterNetEvent("hydravoice:removePlayerFromRadio", removePlayerFromRadio)
+
 function addPlayerToRadio(channel, radio)
-	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, radio)
+	TriggerServerEvent("hydravoice:addPlayerToRadio", channel, CurrentID, radio)
 end
 
 function addPlayerToCall(channel, radio)
-	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, false)
+	TriggerServerEvent("hydravoice:addPlayerToRadio", channel, CurrentID, false)
 end
 
 function setRadioChannel(channel, radio)
-	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, true)
+	TriggerServerEvent("hydravoice:addPlayerToRadio", channel, CurrentID, true)
 end
 
 function setCallChannel(channel, radio)
-	TriggerServerEvent("TokoVoip:addPlayerToRadio", channel, voip.serverId, false)
+	TriggerServerEvent("hydravoice:addPlayerToRadio", channel, CurrentID, false)
 end
 
 function removePlayerFromRadio(channel)
-	TriggerServerEvent("TokoVoip:removePlayerFromRadio", channel, voip.serverId)
+	TriggerServerEvent("hydravoice:removePlayerFromRadio", channel, CurrentID)
 end
 
 function removePlayerFromCall(channel)
-	TriggerServerEvent("TokoVoip:removePlayerFromRadio", channel, voip.serverId)
+	TriggerServerEvent("hydravoice:removePlayerFromRadio", channel, CurrentID)
 end
 
 function isPlayerInChannel(channel)
