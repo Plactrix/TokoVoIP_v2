@@ -12,7 +12,7 @@
 		"chalk": "4.1.2",
 		"console-stamp": "3.1.2",
 		"cron": "4.3.1",
-		"express": "5.1.0"
+		"express": "4.22.0"
 	},
 	"trustedDependencies": [
 		"console-stamp"
